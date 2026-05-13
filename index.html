@@ -208,7 +208,7 @@ tr:hover td{background:#fafaf8}
 </div>
 
 <script>
-var SCRIPT_URL='https://script.google.com/macros/s/AKfycbz3Dhs6etdpXWdJev2NUS4QPnucS2e9vGHuvJMBT3GLt7I6u0RAMuPhTzJjOywnVsSf/exec';
+var SCRIPT_URL='https://script.google.com/macros/s/AKfycbwE_2gPPXRSF3qRw4DnOyeNAFPwcvrthoABz92J9yW2b3VDndH2S8MBuU8S_PMb5Iuk/exec';
 
 var trans=[],ipvData={},facts=[];
 var empActual='TODAS',perActual='hoy',ipvEmp='Carpa BENDECIDA';
@@ -385,32 +385,51 @@ function showStatus(msg,type){
   if(type==='ok')setTimeout(function(){bar.style.display='none';},3000);
 }
 
-function appendToSheet(sheet,values){
-  showStatus('Guardando en Google Sheets...','loading');
-  fetch(SCRIPT_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sheet:sheet,values:values})})
-  .then(function(r){return r.json();})
-  .then(function(data){
-    if(data.success){showStatus('Guardado correctamente en Google Sheets','ok');}
-    else{showStatus('Error: '+data.error,'err');}
-  })
-  .catch(function(){showStatus('Error de conexion','err');});
+function jsonp(url, callback) {
+  var cbName = 'cb_' + Math.round(Math.random() * 1000000);
+  var script = document.createElement('script');
+  window[cbName] = function(data) {
+    delete window[cbName];
+    document.body.removeChild(script);
+    callback(data);
+  };
+  script.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + 'callback=' + cbName;
+  script.onerror = function() {
+    delete window[cbName];
+    document.body.removeChild(script);
+    callback({error: 'Error de conexion'});
+  };
+  document.body.appendChild(script);
 }
 
-function syncSheets(){
-  showStatus('Cargando datos...','loading');
-  fetch(SCRIPT_URL+'?sheet=TRANSACCIONES')
-  .then(function(r){return r.json();})
-  .then(function(data){
-    var rows=data.values||[];
-    trans=rows.slice(1).filter(function(r){return r[1];}).map(function(r){return{fecha:new Date(r[0]),empresa:r[1]||'',tipo:r[2]||'',categoria:r[3]||'',concepto:r[4]||'',monto:Number(r[5])||0};});
-    return fetch(SCRIPT_URL+'?sheet=FACTURAS');
-  }).then(function(r){return r.json();})
-  .then(function(data){
-    var rows=data.values||[];
-    facts=rows.slice(1).filter(function(r){return r[1];}).map(function(r){return{fecha:new Date(r[0]),empresa:r[1]||'',tipo:r[2]||'',cliente:r[3]||'',concepto:r[4]||'',monto:Number(r[5])||0,estado:r[6]||'Pendiente'};});
-    showStatus('Datos sincronizados correctamente','ok');
-    renderRes();renderTrans();renderFact();
-  }).catch(function(){showStatus('Error al sincronizar','err');});
+function appendToSheet(sheet, values) {
+  showStatus('Guardando en Google Sheets...', 'loading');
+  var encoded = encodeURIComponent(JSON.stringify({sheet: sheet, values: values}));
+  jsonp(SCRIPT_URL + '?action=append&data=' + encoded, function(data) {
+    if (data && data.success) {
+      showStatus('Guardado correctamente en Google Sheets', 'ok');
+    } else {
+      showStatus('Error al guardar', 'err');
+    }
+  });
+}
+
+function syncSheets() {
+  showStatus('Cargando datos...', 'loading');
+  jsonp(SCRIPT_URL + '?sheet=TRANSACCIONES', function(data) {
+    var rows = (data && data.values) || [];
+    trans = rows.slice(1).filter(function(r) { return r[1]; }).map(function(r) {
+      return {fecha: new Date(r[0]), empresa: r[1]||'', tipo: r[2]||'', categoria: r[3]||'', concepto: r[4]||'', monto: Number(r[5])||0};
+    });
+    jsonp(SCRIPT_URL + '?sheet=FACTURAS', function(data2) {
+      var rows2 = (data2 && data2.values) || [];
+      facts = rows2.slice(1).filter(function(r) { return r[1]; }).map(function(r) {
+        return {fecha: new Date(r[0]), empresa: r[1]||'', tipo: r[2]||'', cliente: r[3]||'', concepto: r[4]||'', monto: Number(r[5])||0, estado: r[6]||'Pendiente'};
+      });
+      showStatus('Datos sincronizados correctamente', 'ok');
+      renderRes(); renderTrans(); renderFact();
+    });
+  });
 }
 
 renderRes();
