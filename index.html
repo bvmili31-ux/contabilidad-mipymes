@@ -208,15 +208,12 @@ tr:hover td{background:#fafaf8}
 </div>
 
 <script>
-var SHEET_ID='1udcsEfTR3WxNyIniaD5DhtYf6NFC6RtuB8dgu1t7F0E';
-var CLIENT_EMAIL='contabilidad-mipymes@contabilidad-mipymes.iam.gserviceaccount.com';
-var PRIVATE_KEY='-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCgmBp/dzbHtfsM\n371d8RDK8vkGo/Y9UG3WfO6Y0ibzkmrwgQVMYrvyO7l1A9g5I7NnKb0Zfu53315O\nBQxSE+eG8KS4M7ZRLh/YYHdXdOF83UD90wKcmXWYqTBFYPPxwIn8FqgGDU0kPHZv\noeWtg9sUICM9564HdacES2JzhTxbVdHOnm9hYPtD+DlmPSR4yQ52mCEVVS/XXJZK\nqS7tsj82Lwql+xMLxixfsyJ3+G4JGxZckiMIZlRbzFI1/J8oXIqgRa6akRCEPRYi\nl1jVhYlYatmisZ4fZtq5NElut/TxC4BxJyiJxcD9Upk/LLI+8kYzbWg7RS+f5QmT\nsbWRtPzNAgMBAAECggEAF/t/AYgREzP3AM4s3mmQo24ziC1WKYPoUz6m9wVzMa6s\n76uk2epovNz0bigb0zSkpwRRrAwLmrUtxSL12xAD5F/tiWCXmnnz4YFOcS4QOnBk\nM0OewTodmKWzgrje1Tx2nsHXZ8f2vDGXUkZwIUBuqAvAl48QqyaDwZ1sX2oHQHBM\n4NKK62fh1+HQV/K2WfWSMxY+8K/k2PGzwRKjZQzLOvnGFFXcC3SFADdxVL5RW3Yn\nvH9RZk/P0gjDE5YKgfYCiQpN9A1J2mgwBqJeMhMW9IDnfHid/lknwM2CMJ8w8/7c\nocNVMFXGglWLmre0DE1gtxZWxSTxBu26OL5fQ4vCgQKBgQDSwSQ1FPLBk7QO84UC\n6v6qz9en2kJbo6RPf8N9luKkFLjPbg9KKfcy0NFWvaTGVW1st8uTydRQT4PYuwgI\nkwdUlLxA7lSgivb/uOp6F/Gkv43fEC1++I5ABtX5ZddbKc+8nFKPnQgQjjk4AIJK\n0MxSro37NeS6uban9MJlpgBNrQKBgQDDEjNtVR6ze314YGGzNJjD1xQfl4sclUWI\nc/DMGyQ+QLGAgYCv+OP3k7xTD19zBvMGuEmVWUVzTGEIf5u63P1qLMlosZDZV7nm\na0lmHkyj3msyCrSa2Yw/uSmUfAmMOVX1QIU2MLK7wdUwler3S1/Pdlqn6gzT58HM\nkKnkE7MPoQKBgQC4CZrhk5psudt5VuOm6ahbZsXuOKTLuzmHho0ihXkCSWodEQHf\nBIht4nV7Zn2WCBFW56SpOIzjWJxMzP415pZ3IK7HkJdr3g3UvxhaZ8BG2lM8H7dq\n8gfeF1oQwALwA7H5BRT/feQF+Pw0UBV22aAi73TikmxbNkMvpYeAFhabvQKBgG1B\nanBX9mQMTE/5m37lfJJjii/PjuipalJsrXeD1B7R2Rjib5Mf0X6+zgGvYIRqZf9j\nhEMTxuQ26Tn7TtuwHnczMnNi0IAKtGIrwOZjHgXB80QJ3vHD2ttt963kcuyIyG4e\nfv3E9LZYb/FQZlOvcbAe19OoMRsWeOL8O0s1BVtBAoGBAMBc5fed/3XqZUMcg+w/\nZuear8pL4eEar4VAOLTQvtBMOCutMqMJ4aF7PrV4fcPl1MswSgwjpbiot0smiXdD\nGS9RoD1QQfqbNgBjPUPe8yTCLNUeeDhltuVGCc3b4c9QKkVwA5tCJYhVO26bE/bK\neOsFQFDutAZ1Nkf5DoNQ91W+\n-----END PRIVATE KEY-----\n';
+var SCRIPT_URL='https://script.google.com/macros/s/AKfycbxFbB_V1UPGHupzz26sk7_-MuAqMXT2flngjW_Wj1ZXNM36H-_-jCMQesZlWAgAwiMj/exec';
 
 var trans=[],ipvData={},facts=[];
 var empActual='TODAS',perActual='hoy',ipvEmp='Carpa BENDECIDA';
 var EMPS=['Carpa BENDECIDA','Terraza BENDECIDA','Mercadito BENDECIDO'];
 var EMP_COLORS={'Carpa BENDECIDA':'#1D9E75','Terraza BENDECIDA':'#378ADD','Mercadito BENDECIDO':'#D85A30'};
-var cachedToken=null,tokenExpiry=0;
 
 var hoy=new Date();
 document.getElementById('fecha-hoy').textContent=hoy.toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long'});
@@ -388,60 +385,28 @@ function showStatus(msg,type){
   if(type==='ok')setTimeout(function(){bar.style.display='none';},3000);
 }
 
-function str2ab(str){var buf=new ArrayBuffer(str.length);var bufView=new Uint8Array(buf);for(var i=0;i<str.length;i++){bufView[i]=str.charCodeAt(i);}return buf;}
-
-function base64url(str){return btoa(str).replace(/\+/g,'-').replace(/\//g,'_').replace(/=/g,'');}
-
-function getAccessToken(){
-  if(cachedToken&&Date.now()<tokenExpiry)return Promise.resolve(cachedToken);
-  var now=Math.floor(Date.now()/1000);
-  var header=base64url(JSON.stringify({alg:'RS256',typ:'JWT'}));
-  var claim=base64url(JSON.stringify({iss:CLIENT_EMAIL,scope:'https://www.googleapis.com/auth/spreadsheets',aud:'https://oauth2.googleapis.com/token',exp:now+3600,iat:now}));
-  var sigInput=header+'.'+claim;
-  var keyData=PRIVATE_KEY.replace('-----BEGIN PRIVATE KEY-----','').replace('-----END PRIVATE KEY-----','').replace(/\n/g,'').trim();
-  var keyBytes=Uint8Array.from(atob(keyData),function(c){return c.charCodeAt(0);});
-  return crypto.subtle.importKey('pkcs8',keyBytes.buffer,{name:'RSASSA-PKCS1-v1_5',hash:'SHA-256'},false,['sign'])
-  .then(function(key){
-    return crypto.subtle.sign('RSASSA-PKCS1-v1_5',key,str2ab(sigInput));
-  }).then(function(sig){
-    var sigB64=base64url(String.fromCharCode.apply(null,new Uint8Array(sig)));
-    var jwt=sigInput+'.'+sigB64;
-    return fetch('https://oauth2.googleapis.com/token',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer&assertion='+jwt});
-  }).then(function(r){return r.json();})
-  .then(function(data){
-    cachedToken=data.access_token;
-    tokenExpiry=Date.now()+(data.expires_in-60)*1000;
-    return cachedToken;
-  }).catch(function(e){console.error('Auth error:',e);return null;});
-}
-
 function appendToSheet(sheet,values){
   showStatus('Guardando en Google Sheets...','loading');
-  getAccessToken().then(function(token){
-    if(!token){showStatus('Error de autenticación','err');return;}
-    var url='https://sheets.googleapis.com/v4/spreadsheets/'+SHEET_ID+'/values/'+encodeURIComponent(sheet)+'!A1:append?valueInputOption=USER_ENTERED';
-    fetch(url,{method:'POST',headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},body:JSON.stringify({values:[values]})})
-    .then(function(r){if(r.ok){showStatus('Guardado correctamente en Google Sheets','ok');}else{showStatus('Error al guardar — verifica la conexión','err');}})
-    .catch(function(){showStatus('Error de conexión con Google Sheets','err');});
-  });
+  fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({sheet:sheet,values:values})})
+  .then(function(){showStatus('Guardado correctamente','ok');})
+  .catch(function(){showStatus('Error al guardar','err');});
 }
 
 function syncSheets(){
-  showStatus('Cargando datos desde Google Sheets...','loading');
-  getAccessToken().then(function(token){
-    if(!token){showStatus('Error de autenticación','err');return;}
-    var sheets=['TRANSACCIONES','FACTURAS'];
-    Promise.all(sheets.map(function(s){
-      return fetch('https://sheets.googleapis.com/v4/spreadsheets/'+SHEET_ID+'/values/'+encodeURIComponent(s)+'!A2:G1000',{headers:{'Authorization':'Bearer '+token}}).then(function(r){return r.json();});
-    })).then(function(results){
-      var tRows=(results[0].values||[]);
-      trans=tRows.filter(function(r){return r[1];}).map(function(r){return{fecha:new Date(r[0]),empresa:r[1]||'',tipo:r[2]||'',categoria:r[3]||'',concepto:r[4]||'',monto:Number(r[5])||0};});
-      var fRows=(results[1].values||[]);
-      facts=fRows.filter(function(r){return r[1];}).map(function(r){return{fecha:new Date(r[0]),empresa:r[1]||'',tipo:r[2]||'',cliente:r[3]||'',concepto:r[4]||'',monto:Number(r[5])||0,estado:r[6]||'Pendiente'};});
-      showStatus('Datos sincronizados correctamente','ok');
-      renderRes();renderTrans();renderFact();
-    }).catch(function(){showStatus('Error al leer los datos','err');});
-  });
+  showStatus('Cargando datos...','loading');
+  fetch(SCRIPT_URL+'?sheet=TRANSACCIONES')
+  .then(function(r){return r.json();})
+  .then(function(data){
+    var rows=data.values||[];
+    trans=rows.slice(1).filter(function(r){return r[1];}).map(function(r){return{fecha:new Date(r[0]),empresa:r[1]||'',tipo:r[2]||'',categoria:r[3]||'',concepto:r[4]||'',monto:Number(r[5])||0};});
+    return fetch(SCRIPT_URL+'?sheet=FACTURAS');
+  }).then(function(r){return r.json();})
+  .then(function(data){
+    var rows=data.values||[];
+    facts=rows.slice(1).filter(function(r){return r[1];}).map(function(r){return{fecha:new Date(r[0]),empresa:r[1]||'',tipo:r[2]||'',cliente:r[3]||'',concepto:r[4]||'',monto:Number(r[5])||0,estado:r[6]||'Pendiente'};});
+    showStatus('Datos sincronizados correctamente','ok');
+    renderRes();renderTrans();renderFact();
+  }).catch(function(){showStatus('Error al sincronizar','err');});
 }
 
 renderRes();
