@@ -103,6 +103,7 @@ tr:hover td{background:#fafaf8}
   <button class="nb" onclick="showSec('trans',this)"><i class="ti ti-arrows-exchange"></i> Transacciones</button>
   <button class="nb" onclick="showSec('ipv',this)"><i class="ti ti-package"></i> IPV</button>
   <button class="nb" onclick="showSec('facturas',this)"><i class="ti ti-file-invoice"></i> Facturas</button>
+  <button class="nb" onclick="showSec('empresas',this)"><i class="ti ti-building-store"></i> Empresas</button>
 </div>
 
 <div class="content">
@@ -112,11 +113,8 @@ tr:hover td{background:#fafaf8}
 </div>
 
 <div class="sec on" id="sec-resumen">
-  <div class="emp-tabs">
-    <button class="et on" onclick="setEmp(this,'TODAS')">Todas las empresas</button>
-    <button class="et" onclick="setEmp(this,'Carpa BENDECIDA')">Carpa</button>
-    <button class="et" onclick="setEmp(this,'Terraza BENDECIDA')">Terraza</button>
-    <button class="et" onclick="setEmp(this,'Mercadito BENDECIDO')">Mercadito</button>
+  <div class="emp-tabs" id="res-emp-tabs">
+    <button class="et on" onclick="setEmp(this,'TODAS')">Todas</button>
   </div>
   <div class="per-tabs">
     <button class="pt on" onclick="setPer(this,'hoy')">Hoy</button>
@@ -131,7 +129,7 @@ tr:hover td{background:#fafaf8}
   <div class="card">
     <div class="ct">Nueva transacción</div>
     <div class="fg">
-      <div class="fl"><label>Empresa</label><select id="te"><option>Carpa BENDECIDA</option><option>Terraza BENDECIDA</option><option>Mercadito BENDECIDO</option></select></div>
+      <div class="fl"><label>Empresa</label><select id="te"></select></div>
       <div class="fl"><label>Tipo</label><select id="tt"><option>Ingreso</option><option>Gasto</option></select></div>
       <div class="fl"><label>Categoría</label><input type="text" id="tc" placeholder="Venta, Salario, Alquiler..."></div>
       <div class="fl"><label>Monto (CUP)</label><input type="number" id="tm" placeholder="0"></div>
@@ -140,17 +138,35 @@ tr:hover td{background:#fafaf8}
     <div class="fbtn"><button class="btn-p" onclick="addTrans()"><i class="ti ti-check"></i> Guardar transacción</button></div>
   </div>
   <div class="card">
-    <div class="ct">Historial <span id="trans-count" style="font-weight:400;color:#aaa;text-transform:none"></span></div>
-    <div class="tw"><table><thead><tr><th>Fecha</th><th>Empresa</th><th>Tipo</th><th>Categoría</th><th>Concepto</th><th>Monto</th></tr></thead><tbody id="trans-tbody"></tbody></table></div>
+    <div class="ct">
+      <span>Historial <span id="trans-count" style="font-weight:400;color:#aaa;text-transform:none"></span></span>
+      <div style="display:flex;gap:8px;align-items:center">
+        <input type="date" id="trans-fecha-filtro" style="font-size:12px;padding:4px 8px;border:1px solid #e5e5e0;border-radius:8px;color:#1a1a1a" onchange="renderTrans()">
+        <button class="btn-s" style="font-size:12px;padding:5px 10px;display:flex;align-items:center;gap:4px" onclick="exportTrans()"><i class="ti ti-printer"></i> Exportar</button>
+      </div>
+    </div>
+    <div class="tw"><table id="trans-table"><thead><tr><th>Fecha</th><th>Empresa</th><th>Tipo</th><th>Categoría</th><th>Concepto</th><th>Monto</th></tr></thead><tbody id="trans-tbody"></tbody></table></div>
+  </div>
+</div>
+
+<div class="sec" id="sec-empresas">
+  <div class="card">
+    <div class="ct">Agregar empresa</div>
+    <div class="fg">
+      <div class="fl full"><label>Nombre de la empresa</label><input type="text" id="emp-nombre" placeholder="Ej: Panadería La Gloria"></div>
+      <div class="fl"><label>Sector</label><input type="text" id="emp-sector" placeholder="Gastronomía, Comercio..."></div>
+      <div class="fl"><label>Notas</label><input type="text" id="emp-notas" placeholder="Dueño, teléfono..."></div>
+    </div>
+    <div class="fbtn"><button class="btn-p" onclick="addEmpresa()"><i class="ti ti-check"></i> Agregar empresa</button></div>
+  </div>
+  <div class="card">
+    <div class="ct">Empresas registradas</div>
+    <div id="emp-lista"></div>
   </div>
 </div>
 
 <div class="sec" id="sec-ipv">
-  <div class="emp-tabs" id="ipv-emp-tabs">
-    <button class="et on" onclick="setIPVemp(this,'Carpa BENDECIDA')">Carpa</button>
-    <button class="et" onclick="setIPVemp(this,'Terraza BENDECIDA')">Terraza</button>
-    <button class="et" onclick="setIPVemp(this,'Mercadito BENDECIDO')">Mercadito</button>
-  </div>
+  <div class="emp-tabs" id="ipv-emp-tabs"></div>
   <div class="card">
     <div class="ct">Registrar producto — <span id="ipv-emp-label" style="font-weight:400;color:#aaa;text-transform:none">Carpa BENDECIDA</span></div>
     <div class="fg">
@@ -195,7 +211,7 @@ tr:hover td{background:#fafaf8}
   <div class="card">
     <div class="ct">Nueva factura</div>
     <div class="fg">
-      <div class="fl"><label>Empresa</label><select id="fe"><option>Carpa BENDECIDA</option><option>Terraza BENDECIDA</option><option>Mercadito BENDECIDO</option></select></div>
+      <div class="fl"><label>Empresa</label><select id="fe"></select></div>
       <div class="fl"><label>Tipo</label><select id="fti"><option>Emitida</option><option>Recibida</option></select></div>
       <div class="fl"><label>Proveedor / Cliente</label><input type="text" id="fc" placeholder="Nombre"></div>
       <div class="fl"><label>Monto (CUP)</label><input type="number" id="fm" placeholder="0"></div>
@@ -205,8 +221,14 @@ tr:hover td{background:#fafaf8}
     <div class="fbtn"><button class="btn-p" onclick="addFactura()"><i class="ti ti-check"></i> Guardar factura</button></div>
   </div>
   <div class="card">
-    <div class="ct">Facturas registradas</div>
-    <div class="tw"><table><thead><tr><th>Fecha</th><th>Empresa</th><th>Tipo</th><th>Cliente/Prov.</th><th>Concepto</th><th>Monto</th><th>Estado</th></tr></thead><tbody id="fact-tbody"></tbody></table></div>
+    <div class="ct">
+      <span>Facturas registradas</span>
+      <div style="display:flex;gap:8px;align-items:center">
+        <input type="date" id="fact-fecha-filtro" style="font-size:12px;padding:4px 8px;border:1px solid #e5e5e0;border-radius:8px;color:#1a1a1a" onchange="renderFact()">
+        <button class="btn-s" style="font-size:12px;padding:5px 10px;display:flex;align-items:center;gap:4px" onclick="exportFact()"><i class="ti ti-printer"></i> Exportar</button>
+      </div>
+    </div>
+    <div class="tw"><table id="fact-table"><thead><tr><th>Fecha</th><th>Empresa</th><th>Tipo</th><th>Cliente/Prov.</th><th>Concepto</th><th>Monto</th><th>Estado</th></tr></thead><tbody id="fact-tbody"></tbody></table></div>
   </div>
 </div>
 
@@ -216,10 +238,107 @@ tr:hover td{background:#fafaf8}
 <script>
 var SCRIPT_URL='https://script.google.com/macros/s/AKfycbylvub1T5i_6WcH-dckEdPzi3ABCcGuvqD35oOxaPc3pIrrePN88a_T1gBtebgE2l0m/exec';
 
-var trans=[],ipvData={},facts=[];
-var empActual='TODAS',perActual='hoy',ipvEmp='Carpa BENDECIDA';
-var EMPS=['Carpa BENDECIDA','Terraza BENDECIDA','Mercadito BENDECIDO'];
-var EMP_COLORS={'Carpa BENDECIDA':'#1D9E75','Terraza BENDECIDA':'#378ADD','Mercadito BENDECIDO':'#D85A30'};
+var trans=[],ipvData={},facts=[],empresas=[];
+var empActual='TODAS',perActual='hoy',ipvEmp='';
+var EMP_COLORS_LIST=['#1D9E75','#378ADD','#D85A30','#9B59B6','#E67E22','#E91E63'];
+var EMP_COLORS={};
+
+// Load empresas from localStorage or use defaults
+function loadEmpresas(){
+  var saved=localStorage.getItem('mipymes_empresas');
+  if(saved){
+    empresas=JSON.parse(saved);
+  } else {
+    empresas=[
+      {nombre:'Carpa BENDECIDA',sector:'Gastronomía',notas:''},
+      {nombre:'Terraza BENDECIDA',sector:'Gastronomía',notas:''},
+      {nombre:'Mercadito BENDECIDO',sector:'Comercio',notas:''}
+    ];
+    saveEmpresas();
+  }
+  empresas.forEach(function(e,i){ EMP_COLORS[e.nombre]=EMP_COLORS_LIST[i%EMP_COLORS_LIST.length]; });
+  if(empresas.length>0&&!ipvEmp) ipvEmp=empresas[0].nombre;
+  renderEmpresasTabs();
+  renderEmpresasList();
+  renderEmpresasSelects();
+}
+
+function saveEmpresas(){
+  localStorage.setItem('mipymes_empresas',JSON.stringify(empresas));
+}
+
+function addEmpresa(){
+  var nombre=gv('emp-nombre').trim();
+  if(!nombre)return;
+  var sector=gv('emp-sector'),notas=gv('emp-notas');
+  empresas.push({nombre:nombre,sector:sector,notas:notas});
+  EMP_COLORS[nombre]=EMP_COLORS_LIST[(empresas.length-1)%EMP_COLORS_LIST.length];
+  saveEmpresas();
+  appendToSheet('EMPRESAS',[empresas.length,nombre,sector,notas]);
+  document.getElementById('emp-nombre').value='';
+  document.getElementById('emp-sector').value='';
+  document.getElementById('emp-notas').value='';
+  renderEmpresasTabs();
+  renderEmpresasList();
+  renderEmpresasSelects();
+  renderRes();
+}
+
+function removeEmpresa(idx){
+  if(!confirm('¿Eliminar '+empresas[idx].nombre+'? Esto no borra sus datos históricos.'))return;
+  empresas.splice(idx,1);
+  saveEmpresas();
+  renderEmpresasTabs();
+  renderEmpresasList();
+  renderEmpresasSelects();
+  renderRes();
+}
+
+function renderEmpresasTabs(){
+  // Resumen tabs
+  var resTab=document.getElementById('res-emp-tabs');
+  if(resTab){
+    resTab.innerHTML='<button class="et on" onclick="setEmp(this,\'TODAS\')">Todas</button>';
+    empresas.forEach(function(e){
+      resTab.innerHTML+='<button class="et" onclick="setEmp(this,\''+e.nombre+'\')">'+e.nombre.split(' ')[0]+'</button>';
+    });
+  }
+  // IPV tabs
+  var ipvTab=document.getElementById('ipv-emp-tabs');
+  if(ipvTab){
+    ipvTab.innerHTML='';
+    empresas.forEach(function(e,i){
+      var cls=i===0?'et on':'et';
+      ipvTab.innerHTML+='<button class="'+cls+'" onclick="setIPVemp(this,\''+e.nombre+'\')">'+e.nombre.split(' ')[0]+'</button>';
+    });
+    if(empresas.length>0){
+      ipvEmp=empresas[0].nombre;
+      document.getElementById('ipv-emp-label').textContent=ipvEmp;
+      document.getElementById('ipv-tbl-label').textContent=ipvEmp;
+    }
+  }
+}
+
+function renderEmpresasList(){
+  var lista=document.getElementById('emp-lista');
+  if(!lista)return;
+  if(!empresas.length){lista.innerHTML='<div class="empty"><i class="ti ti-inbox"></i>Sin empresas registradas</div>';return;}
+  lista.innerHTML=empresas.map(function(e,i){
+    return '<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid #f0f0eb">'
+      +'<div style="display:flex;align-items:center;gap:10px"><div style="width:10px;height:10px;border-radius:50%;background:'+(EMP_COLORS[e.nombre]||'#888')+'"></div>'
+      +'<div><div style="font-size:13px;font-weight:600">'+e.nombre+'</div><div style="font-size:11px;color:#888">'+e.sector+(e.notas?' · '+e.notas:'')+'</div></div></div>'
+      +'<button onclick="removeEmpresa('+i+')" style="background:none;border:none;color:#A32D2D;cursor:pointer;font-size:12px"><i class="ti ti-trash"></i></button>'
+      +'</div>';
+  }).join('');
+}
+
+function renderEmpresasSelects(){
+  var opts=empresas.map(function(e){return '<option>'+e.nombre+'</option>';}).join('');
+  ['te','fe'].forEach(function(id){
+    var el=document.getElementById(id);
+    if(el) el.innerHTML=opts;
+  });
+}
 
 var hoy=new Date();
 document.getElementById('fecha-hoy').textContent=hoy.toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long'});
@@ -237,6 +356,7 @@ function showSec(id,btn){
   if(id==='trans')renderTrans();
   if(id==='ipv')renderIPV();
   if(id==='facturas')renderFact();
+  if(id==='empresas'){renderEmpresasList();}
 }
 
 function setEmp(btn,emp){
@@ -268,7 +388,7 @@ function calcEmp(emp){
   var ing=t.filter(function(x){return x.tipo==='Ingreso';}).reduce(function(a,x){return a+Number(x.monto);},0);
   var gas=t.filter(function(x){return x.tipo==='Gasto';}).reduce(function(a,x){return a+Number(x.monto);},0);
   var ipvArr=[];
-  if(emp==='TODAS'){EMPS.forEach(function(e){if(ipvData[e])ipvArr=ipvArr.concat(ipvData[e]);});}
+  if(emp==='TODAS'){Object.keys(ipvData).forEach(function(e){ipvArr=ipvArr.concat(ipvData[e]);});}
   else{ipvArr=ipvData[emp]||[];}
   var ganIPV=ipvArr.reduce(function(a,r){return a+r.ganancia;},0);
   var perdIPV=ipvArr.reduce(function(a,r){return a+r.perdida;},0);
@@ -277,7 +397,7 @@ function calcEmp(emp){
 }
 
 function renderRes(){
-  var emps=empActual==='TODAS'?EMPS:[empActual];
+  var emps=empActual==='TODAS'?empresas.map(function(e){return e.nombre;}):[empActual];
   var html='';
   emps.forEach(function(emp){
     var r=calcEmp(emp);
@@ -316,11 +436,35 @@ function addTrans(){
 
 function renderTrans(){
   var tb=document.getElementById('trans-tbody');
-  document.getElementById('trans-count').textContent='('+trans.length+' registros)';
-  if(!trans.length){tb.innerHTML='<tr><td colspan="6" class="empty"><i class="ti ti-inbox"></i>Sin transacciones aún</td></tr>';return;}
-  tb.innerHTML=trans.slice().reverse().map(function(t){
-    return '<tr><td>'+fdate(t.fecha)+'</td><td style="color:'+EMP_COLORS[t.empresa]+';font-weight:600">'+t.empresa.split(' ')[0]+'</td><td><span class="badge '+(t.tipo==='Ingreso'?'bg':'br')+'">'+t.tipo+'</span></td><td>'+t.categoria+'</td><td>'+t.concepto+'</td><td style="font-weight:700">'+fmt(t.monto)+'</td></tr>';
+  var fechaFiltro=document.getElementById('trans-fecha-filtro').value;
+  var datos=trans.slice();
+  if(fechaFiltro) datos=datos.filter(function(t){return fdate(t.fecha)===fdate(new Date(fechaFiltro+'T12:00:00'));});
+  document.getElementById('trans-count').textContent='('+datos.length+' registros)';
+  if(!datos.length){tb.innerHTML='<tr><td colspan="6" class="empty"><i class="ti ti-inbox"></i>Sin transacciones</td></tr>';return;}
+  tb.innerHTML=datos.slice().reverse().map(function(t){
+    return '<tr><td>'+fdate(t.fecha)+'</td><td style="color:'+(EMP_COLORS[t.empresa]||'#888')+';font-weight:600">'+t.empresa.split(' ')[0]+'</td><td><span class="badge '+(t.tipo==='Ingreso'?'bg':'br')+'">'+t.tipo+'</span></td><td>'+t.categoria+'</td><td>'+t.concepto+'</td><td style="font-weight:700">'+fmt(t.monto)+'</td></tr>';
   }).join('');
+}
+
+function exportTrans(){
+  var fecha=document.getElementById('trans-fecha-filtro').value||new Date().toLocaleDateString('es-ES');
+  var titulo='Transacciones — '+fecha;
+  exportTable('trans-table',titulo);
+}
+
+function exportFact(){
+  var fecha=document.getElementById('fact-fecha-filtro').value||new Date().toLocaleDateString('es-ES');
+  var titulo='Facturas — '+fecha;
+  exportTable('fact-table',titulo);
+}
+
+function exportTable(tableId, titulo){
+  var tabla=document.getElementById(tableId).outerHTML;
+  var html='<html><head><meta charset="UTF-8"><title>'+titulo+'</title><style>body{font-family:Arial,sans-serif;padding:20px}h2{color:#1D9E75;margin-bottom:16px}table{border-collapse:collapse;width:100%}th{background:#1D9E75;color:#fff;padding:8px;text-align:left;font-size:12px}td{padding:8px;border-bottom:1px solid #eee;font-size:12px}.badge{padding:2px 6px;border-radius:10px;font-size:11px}</style></head><body><h2>'+titulo+'</h2>'+tabla+'</body></html>';
+  var win=window.open('','_blank');
+  win.document.write(html);
+  win.document.close();
+  win.print();
 }
 
 function calcIPV(){
@@ -393,10 +537,13 @@ function toggleEstado(idx){
 
 function renderFact(){
   var tb=document.getElementById('fact-tbody');
-  if(!facts.length){tb.innerHTML='<tr><td colspan="7" class="empty"><i class="ti ti-inbox"></i>Sin facturas aún</td></tr>';return;}
-  tb.innerHTML=facts.slice().reverse().map(function(f,i){
+  var fechaFiltro=document.getElementById('fact-fecha-filtro').value;
+  var datos=facts.slice();
+  if(fechaFiltro) datos=datos.filter(function(f){return fdate(f.fecha)===fdate(new Date(fechaFiltro+'T12:00:00'));});
+  if(!datos.length){tb.innerHTML='<tr><td colspan="7" class="empty"><i class="ti ti-inbox"></i>Sin facturas</td></tr>';return;}
+  tb.innerHTML=datos.slice().reverse().map(function(f,i){
     var ri=facts.length-1-i;
-    return '<tr><td>'+fdate(f.fecha)+'</td><td style="color:'+EMP_COLORS[f.empresa]+';font-weight:600">'+f.empresa.split(' ')[0]+'</td><td>'+f.tipo+'</td><td>'+f.cliente+'</td><td>'+f.concepto+'</td><td style="font-weight:700">'+fmt(f.monto)+'</td><td><span class="badge '+(f.estado==='Pagada'?'bg':'ba')+'" style="cursor:pointer" onclick="toggleEstado('+ri+')">'+f.estado+'</span></td></tr>';
+    return '<tr><td>'+fdate(f.fecha)+'</td><td style="color:'+(EMP_COLORS[f.empresa]||'#888')+';font-weight:600">'+f.empresa.split(' ')[0]+'</td><td>'+f.tipo+'</td><td>'+f.cliente+'</td><td>'+f.concepto+'</td><td style="font-weight:700">'+fmt(f.monto)+'</td><td><span class="badge '+(f.estado==='Pagada'?'bg':'ba')+'" style="cursor:pointer" onclick="toggleEstado('+ri+')">'+f.estado+'</span></td></tr>';
   }).join('');
 }
 
@@ -469,6 +616,7 @@ function syncSheets() {
   });
 }
 
+loadEmpresas();
 renderRes();
 </script>
 </body>
