@@ -174,12 +174,18 @@ tr:hover td{background:#fafaf8}
     <div class="fbtn"><button class="btn-p" onclick="addIPV()"><i class="ti ti-check"></i> Guardar registro</button></div>
   </div>
   <div class="card">
-    <div class="ct">IPV del día — <span id="ipv-tbl-label" style="font-weight:400;color:#aaa;text-transform:none">Carpa BENDECIDA</span></div>
+    <div class="ct">
+      <span>IPV — <span id="ipv-tbl-label" style="font-weight:400;color:#aaa;text-transform:none">Carpa BENDECIDA</span></span>
+      <div style="display:flex;gap:8px;align-items:center">
+        <input type="date" id="ipv-fecha-filtro" style="font-size:12px;padding:4px 8px;border:1px solid #e5e5e0;border-radius:8px;color:#1a1a1a" onchange="renderIPV()">
+        <button class="btn-s" style="font-size:12px;padding:5px 10px;display:flex;align-items:center;gap:4px" onclick="exportIPV()"><i class="ti ti-printer"></i> Exportar</button>
+      </div>
+    </div>
     <div class="tw">
-      <table>
-        <thead><tr><th>Producto</th><th>Ini</th><th>Ent</th><th>Ventas</th><th>Bajas</th><th>Extr</th><th>Final</th><th>P.Costo</th><th>P.Venta</th><th>Ganancia</th><th>Pérdida</th></tr></thead>
+      <table id="ipv-table">
+        <thead><tr><th>Fecha</th><th>Producto</th><th>Ini</th><th>Ent</th><th>Ventas</th><th>Bajas</th><th>Extr</th><th>Final</th><th>P.Costo</th><th>P.Venta</th><th>Ganancia</th><th>Pérdida</th></tr></thead>
         <tbody id="ipv-tbody"></tbody>
-        <tfoot><tr class="tfoot-row"><td colspan="9" style="padding:8px 10px;font-size:12px">Totales del día</td><td style="padding:8px 10px;font-size:12px;color:#0F6E56" id="ipv-tot-g">0 CUP</td><td style="padding:8px 10px;font-size:12px;color:#A32D2D" id="ipv-tot-p">0 CUP</td></tr></tfoot>
+        <tfoot><tr class="tfoot-row"><td colspan="10" style="padding:8px 10px;font-size:12px">Totales</td><td style="padding:8px 10px;font-size:12px;color:#0F6E56" id="ipv-tot-g">0 CUP</td><td style="padding:8px 10px;font-size:12px;color:#A32D2D" id="ipv-tot-p">0 CUP</td></tr></tfoot>
       </table>
     </div>
   </div>
@@ -208,7 +214,7 @@ tr:hover td{background:#fafaf8}
 </div>
 
 <script>
-var SCRIPT_URL='https://script.google.com/macros/s/AKfycbwE_2gPPXRSF3qRw4DnOyeNAFPwcvrthoABz92J9yW2b3VDndH2S8MBuU8S_PMb5Iuk/exec';
+var SCRIPT_URL='https://script.google.com/macros/s/AKfycbyE1fFCELcVU8-gsYShaV0nqvX8sqPMZ0zMMvONER3sC4iwvBkbjOjYRXsYmHd0hGAY/exec';
 
 var trans=[],ipvData={},facts=[];
 var empActual='TODAS',perActual='hoy',ipvEmp='Carpa BENDECIDA';
@@ -338,20 +344,36 @@ function addIPV(){
   ipvData[ipvEmp].push(row);
   ['ip','ii','ien','iv','ib','ix','ipc','ipv2'].forEach(function(id){document.getElementById(id).value='';});
   calcIPV();
-  appendToSheet('TRANSACCIONES',[fdate(row.fecha),ipvEmp,'IPV',prod,'Registro IPV',0]);
+  appendToSheet('IPV',[fdate(row.fecha),ipvEmp,prod,ini,ent,ven,baj,ext,fin,pc,pv,Math.round(gan),Math.round(perd)]);
   renderIPV();renderRes();
 }
 
 function renderIPV(){
   var datos=ipvData[ipvEmp]||[];
+  var fechaFiltro=document.getElementById('ipv-fecha-filtro').value;
+  if(fechaFiltro){
+    datos=datos.filter(function(r){return fdate(r.fecha)===fdate(new Date(fechaFiltro+'T12:00:00'));});
+  }
   var tb=document.getElementById('ipv-tbody');
-  if(!datos.length){tb.innerHTML='<tr><td colspan="11" class="empty"><i class="ti ti-inbox"></i>Sin registros hoy</td></tr>';document.getElementById('ipv-tot-g').textContent='0 CUP';document.getElementById('ipv-tot-p').textContent='0 CUP';return;}
+  if(!datos.length){tb.innerHTML='<tr><td colspan="12" class="empty"><i class="ti ti-inbox"></i>Sin registros</td></tr>';document.getElementById('ipv-tot-g').textContent='0 CUP';document.getElementById('ipv-tot-p').textContent='0 CUP';return;}
   var tg=0,tp=0;
   tb.innerHTML=datos.map(function(r){tg+=r.ganancia;tp+=r.perdida;
-    return '<tr><td style="font-weight:600">'+r.producto+'</td><td>'+r.ini+'</td><td>'+r.ent+'</td><td>'+r.ven+'</td><td>'+r.baj+'</td><td>'+r.ext+'</td><td style="font-weight:700">'+r.fin+'</td><td>'+fmt(r.pc)+'</td><td>'+fmt(r.pv)+'</td><td style="color:#0F6E56;font-weight:700">'+fmt(r.ganancia)+'</td><td style="color:#A32D2D">'+fmt(r.perdida)+'</td></tr>';
+    return '<tr><td>'+fdate(r.fecha)+'</td><td style="font-weight:600">'+r.producto+'</td><td>'+r.ini+'</td><td>'+r.ent+'</td><td>'+r.ven+'</td><td>'+r.baj+'</td><td>'+r.ext+'</td><td style="font-weight:700">'+r.fin+'</td><td>'+fmt(r.pc)+'</td><td>'+fmt(r.pv)+'</td><td style="color:#0F6E56;font-weight:700">'+fmt(r.ganancia)+'</td><td style="color:#A32D2D">'+fmt(r.perdida)+'</td></tr>';
   }).join('');
   document.getElementById('ipv-tot-g').textContent=fmt(tg);
   document.getElementById('ipv-tot-p').textContent=fmt(tp);
+}
+
+function exportIPV(){
+  var emp=document.getElementById('ipv-tbl-label').textContent;
+  var fecha=document.getElementById('ipv-fecha-filtro').value||new Date().toLocaleDateString('es-ES');
+  var titulo='IPV — '+emp+' — '+fecha;
+  var tabla=document.getElementById('ipv-table').outerHTML;
+  var html='<html><head><meta charset="UTF-8"><title>'+titulo+'</title><style>body{font-family:Arial,sans-serif;padding:20px}h2{color:#1D9E75;margin-bottom:16px}table{border-collapse:collapse;width:100%}th{background:#1D9E75;color:#fff;padding:8px;text-align:left;font-size:12px}td{padding:8px;border-bottom:1px solid #eee;font-size:12px}.tfoot-row td{font-weight:700;background:#f5f5f0}</style></head><body><h2>'+titulo+'</h2>'+tabla+'</body></html>';
+  var win=window.open('','_blank');
+  win.document.write(html);
+  win.document.close();
+  win.print();
 }
 
 function addFactura(){
@@ -426,8 +448,23 @@ function syncSheets() {
       facts = rows2.slice(1).filter(function(r) { return r[1]; }).map(function(r) {
         return {fecha: new Date(r[0]), empresa: r[1]||'', tipo: r[2]||'', cliente: r[3]||'', concepto: r[4]||'', monto: Number(r[5])||0, estado: r[6]||'Pendiente'};
       });
-      showStatus('Datos sincronizados correctamente', 'ok');
-      renderRes(); renderTrans(); renderFact();
+      jsonp(SCRIPT_URL + '?sheet=IPV', function(data3) {
+        var rows3 = (data3 && data3.values) || [];
+        ipvData = {};
+        rows3.slice(1).filter(function(r) { return r[1]; }).forEach(function(r) {
+          var emp = r[1];
+          if (!ipvData[emp]) ipvData[emp] = [];
+          ipvData[emp].push({
+            fecha: new Date(r[0]), producto: r[2]||'',
+            ini: Number(r[3])||0, ent: Number(r[4])||0, ven: Number(r[5])||0,
+            baj: Number(r[6])||0, ext: Number(r[7])||0, fin: Number(r[8])||0,
+            pc: Number(r[9])||0, pv: Number(r[10])||0,
+            ganancia: Number(r[11])||0, perdida: Number(r[12])||0
+          });
+        });
+        showStatus('Datos sincronizados correctamente', 'ok');
+        renderRes(); renderTrans(); renderFact(); renderIPV();
+      });
     });
   });
 }
