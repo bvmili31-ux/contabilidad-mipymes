@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Contabilidad Mipymes Bendecidas</title>
+<title>Contabilidad Mipymes</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f0;min-height:100vh}
-.app{max-width:900px;margin:0 auto;padding-bottom:2rem}
+.app{max-width:960px;margin:0 auto;padding-bottom:2rem}
 .topbar{background:#fff;border-bottom:1px solid #e5e5e0;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
 .logo{display:flex;align-items:center;gap:12px}
 .logo-icon{width:36px;height:36px;background:#1D9E75;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px}
@@ -18,9 +18,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .date-badge{font-size:12px;color:#888;background:#f5f5f0;padding:5px 10px;border-radius:8px}
 .sync-btn{font-size:12px;color:#1D9E75;background:none;border:1px solid #1D9E75;border-radius:8px;padding:6px 12px;cursor:pointer;display:flex;align-items:center;gap:5px;font-weight:500}
 .nav{display:flex;background:#fff;border-bottom:1px solid #e5e5e0;overflow-x:auto;padding:0 8px}
-.nb{padding:12px 16px;font-size:13px;font-weight:400;color:#888;background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:6px;transition:all 0.15s}
+.nb{padding:12px 14px;font-size:12px;font-weight:400;color:#888;background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:5px;transition:all 0.15s}
 .nb.on{color:#1D9E75;border-bottom-color:#1D9E75;font-weight:600}
-.nb i{font-size:16px}
+.nb i{font-size:15px}
 .content{padding:16px}
 .sec{display:none}.sec.on{display:block}
 .emp-tabs{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
@@ -32,21 +32,20 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:14px}
 .metric{background:#fff;border:1px solid #e5e5e0;border-radius:12px;padding:14px}
 .ml{font-size:11px;color:#888;margin-bottom:6px;display:flex;align-items:center;gap:4px;font-weight:500}
-.ml i{font-size:14px}
-.mv{font-size:18px;font-weight:700;color:#1a1a1a}
+.mv{font-size:17px;font-weight:700;color:#1a1a1a}
 .mv.g{color:#0F6E56}.mv.r{color:#A32D2D}
 .card{background:#fff;border:1px solid #e5e5e0;border-radius:14px;padding:16px 18px;margin-bottom:12px}
-.ct{font-size:12px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between}
+.ct{font-size:12px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
 .fg{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .fl{display:flex;flex-direction:column;gap:4px}
 .fl.full{grid-column:1/-1}
 .fl label{font-size:11px;color:#888;font-weight:600;letter-spacing:0.03em}
 .fl input,.fl select{font-size:13px;padding:8px 10px;border:1px solid #e5e5e0;border-radius:8px;background:#fff;color:#1a1a1a;outline:none;transition:border 0.15s}
 .fl input:focus,.fl select:focus{border-color:#1D9E75}
-.fbtn{display:flex;justify-content:flex-end;margin-top:12px;gap:8px}
+.fbtn{display:flex;justify-content:flex-end;margin-top:12px;gap:8px;flex-wrap:wrap}
 .btn-p{background:#1D9E75;color:#fff;border:none;border-radius:8px;padding:8px 18px;font-size:13px;cursor:pointer;font-weight:600;display:flex;align-items:center;gap:6px}
 .btn-p:hover{background:#0F6E56}
-.btn-s{background:#fff;color:#1a1a1a;border:1px solid #e5e5e0;border-radius:8px;padding:8px 14px;font-size:13px;cursor:pointer}
+.btn-s{background:#fff;color:#1a1a1a;border:1px solid #e5e5e0;border-radius:8px;padding:8px 14px;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:5px}
 .tw{overflow-x:auto}
 table{width:100%;border-collapse:collapse;font-size:12px}
 th{padding:8px 10px;text-align:left;color:#888;font-weight:600;border-bottom:1px solid #e5e5e0;white-space:nowrap;font-size:11px;letter-spacing:0.03em}
@@ -57,12 +56,13 @@ tr:hover td{background:#fafaf8}
 .bg{background:#E1F5EE;color:#085041}
 .br{background:#FCEBEB;color:#791F1F}
 .ba{background:#FAEEDA;color:#633806}
+.bp{background:#EEF4FF;color:#1E3A8A}
 .empty{text-align:center;padding:32px;color:#888;font-size:13px}
 .empty i{font-size:28px;display:block;margin-bottom:8px;opacity:0.4}
 .calc-box{background:#f8fdf9;border:1px solid #c8ecd8;border-radius:10px;padding:12px 14px;margin-top:12px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
 .cl{font-size:11px;color:#666;margin-bottom:3px;font-weight:500}
 .cv{font-size:15px;font-weight:700;color:#1a1a1a}
-.cv.g{color:#0F6E56}.cv.r{color:#A32D2D}
+.cv.g{color:#0F6E56}.cv.r{color:#A32D2D}.cv.b{color:#1E3A8A}
 .tfoot-row td{font-weight:700;background:#f8f8f5}
 .status-bar{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:10px;font-size:12px;margin-bottom:12px;font-weight:500}
 .status-bar.ok{background:#E1F5EE;color:#085041}
@@ -74,6 +74,10 @@ tr:hover td{background:#fafaf8}
 .emp-name{font-size:14px;font-weight:700;color:#1a1a1a}
 .total-card{background:#fff;border:2px solid #1D9E75;border-radius:14px;padding:16px 18px;margin-bottom:12px}
 .total-card .ct{color:#0F6E56}
+.info-box{background:#EEF4FF;border:1px solid #BFDBFE;border-radius:10px;padding:10px 14px;font-size:12px;color:#1E3A8A;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.moneda-badge{display:inline-block;padding:2px 6px;border-radius:6px;font-size:10px;font-weight:700;background:#EEF4FF;color:#1E3A8A;margin-left:4px}
+.divider{height:1px;background:#f0f0eb;margin:12px 0}
+.equiv-box{font-size:13px;padding:8px 10px;border:1px solid #e5e5e0;border-radius:8px;background:#f5f5f0;color:#666}
 @media(max-width:600px){
   .metrics{grid-template-columns:1fr 1fr}
   .fg{grid-template-columns:1fr}
@@ -89,7 +93,7 @@ tr:hover td{background:#fafaf8}
     <div class="logo-icon"><i class="ti ti-building-store"></i></div>
     <div>
       <div class="logo-text">Contabilidad Mipymes</div>
-      <div class="logo-sub">Bendecidas · Pesos Cubanos (CUP)</div>
+      <div class="logo-sub" id="logo-sub">Sistema de gestion contable</div>
     </div>
   </div>
   <div class="topbar-right">
@@ -103,19 +107,17 @@ tr:hover td{background:#fafaf8}
   <button class="nb" onclick="showSec('trans',this)"><i class="ti ti-arrows-exchange"></i> Transacciones</button>
   <button class="nb" onclick="showSec('ipv',this)"><i class="ti ti-package"></i> IPV</button>
   <button class="nb" onclick="showSec('facturas',this)"><i class="ti ti-file-invoice"></i> Facturas</button>
+  <button class="nb" onclick="showSec('cuentas',this)"><i class="ti ti-book"></i> Cuentas</button>
+  <button class="nb" onclick="showSec('monedas',this)"><i class="ti ti-currency-dollar"></i> Monedas</button>
   <button class="nb" onclick="showSec('empresas',this)"><i class="ti ti-building-store"></i> Empresas</button>
 </div>
 
 <div class="content">
+<div id="status-bar" class="status-bar loading" style="display:none"><i class="ti ti-loader"></i><span id="status-msg"></span></div>
 
-<div id="status-bar" class="status-bar loading" style="display:none">
-  <i class="ti ti-loader"></i><span id="status-msg">Conectando...</span>
-</div>
-
+<!-- RESUMEN -->
 <div class="sec on" id="sec-resumen">
-  <div class="emp-tabs" id="res-emp-tabs">
-    <button class="et on" onclick="setEmp(this,'TODAS')">Todas</button>
-  </div>
+  <div class="emp-tabs" id="res-emp-tabs"><button class="et on" onclick="setEmp(this,'TODAS')">Todas</button></div>
   <div class="per-tabs">
     <button class="pt on" onclick="setPer(this,'hoy')">Hoy</button>
     <button class="pt" onclick="setPer(this,'semana')">Semana</button>
@@ -125,37 +127,193 @@ tr:hover td{background:#fafaf8}
   <div id="res-content"></div>
 </div>
 
+<!-- TRANSACCIONES -->
 <div class="sec" id="sec-trans">
   <div class="card">
-    <div class="ct">Nueva transacción</div>
+    <div class="ct">Nueva transaccion</div>
     <div class="fg">
       <div class="fl"><label>Empresa</label><select id="te"></select></div>
       <div class="fl"><label>Tipo</label><select id="tt"><option>Ingreso</option><option>Gasto</option></select></div>
-      <div class="fl"><label>Categoría</label><input type="text" id="tc" placeholder="Venta, Salario, Alquiler..."></div>
-      <div class="fl"><label>Monto (CUP)</label><input type="number" id="tm" placeholder="0"></div>
-      <div class="fl full"><label>Concepto</label><input type="text" id="tk" placeholder="Descripción breve"></div>
+      <div class="fl"><label>Categoria</label><input type="text" id="tc" placeholder="Venta, Salario, Alquiler..."></div>
+      <div class="fl"><label>Moneda</label><select id="t-moneda" onchange="updateEquiv('t-moneda','tm','t-equiv')"></select></div>
+      <div class="fl"><label id="t-monto-lbl">Monto</label><input type="number" id="tm" placeholder="0" oninput="updateEquiv('t-moneda','tm','t-equiv');calcComision()"></div>
+      <div class="fl"><label>Equiv. CUP</label><div class="equiv-box" id="t-equiv">0 CUP</div></div>
+      <div class="fl"><label>Metodo de pago</label><select id="t-metodo" onchange="toggleComision()">
+        <option value="efectivo">Efectivo</option>
+        <option value="transferencia">Transferencia bancaria</option>
+        <option value="tarjeta">Tarjeta</option>
+        <option value="electronico">Pago electronico</option>
+      </select></div>
+      <div class="fl" id="pct-field" style="display:none"><label>Comision / Impuesto (%)</label><input type="number" id="t-pct" placeholder="0" step="0.1" oninput="calcComision()"></div>
+      <div class="fl" id="pct-monto" style="display:none"><label>Monto comision</label><div class="equiv-box" id="t-com-val" style="color:#A32D2D">0 CUP</div></div>
+      <div class="fl full"><label>Concepto</label><input type="text" id="tk" placeholder="Descripcion breve"></div>
     </div>
-    <div class="fbtn"><button class="btn-p" onclick="addTrans()"><i class="ti ti-check"></i> Guardar transacción</button></div>
+    <div class="fbtn"><button class="btn-p" onclick="addTrans()"><i class="ti ti-check"></i> Guardar</button></div>
   </div>
   <div class="card">
     <div class="ct">
       <span>Historial <span id="trans-count" style="font-weight:400;color:#aaa;text-transform:none"></span></span>
-      <div style="display:flex;gap:8px;align-items:center">
-        <input type="date" id="trans-fecha-filtro" style="font-size:12px;padding:4px 8px;border:1px solid #e5e5e0;border-radius:8px;color:#1a1a1a" onchange="renderTrans()">
-        <button class="btn-s" style="font-size:12px;padding:5px 10px;display:flex;align-items:center;gap:4px" onclick="exportTrans()"><i class="ti ti-printer"></i> Exportar</button>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <input type="date" id="trans-ff" style="font-size:12px;padding:4px 8px;border:1px solid #e5e5e0;border-radius:8px" onchange="renderTrans()">
+        <button class="btn-s" style="font-size:12px;padding:5px 10px" onclick="exportTable('trans-tbl','Transacciones')"><i class="ti ti-printer"></i> Exportar</button>
       </div>
     </div>
-    <div class="tw"><table id="trans-table"><thead><tr><th>Fecha</th><th>Empresa</th><th>Tipo</th><th>Categoría</th><th>Concepto</th><th>Monto</th></tr></thead><tbody id="trans-tbody"></tbody></table></div>
+    <div class="tw"><table id="trans-tbl"><thead><tr><th>Fecha</th><th>Empresa</th><th>Tipo</th><th>Categoria</th><th>Metodo</th><th>Concepto</th><th>Monto</th><th>Comision</th><th>Total CUP</th></tr></thead><tbody id="trans-tbody"></tbody></table></div>
   </div>
 </div>
 
+<!-- IPV -->
+<div class="sec" id="sec-ipv">
+  <div class="emp-tabs" id="ipv-emp-tabs"></div>
+  <div class="card">
+    <div class="ct">Registrar producto — <span id="ipv-emp-lbl" style="font-weight:400;color:#aaa;text-transform:none">—</span></div>
+    <div class="fg">
+      <div class="fl full"><label>Producto</label><input type="text" id="ip" placeholder="Nombre del producto" oninput="buscarPPP()"></div>
+      <div class="fl"><label>Existencia inicial</label><input type="number" id="ii" placeholder="0" oninput="calcIPV()"></div>
+      <div class="fl"><label>Entradas</label><input type="number" id="ien" placeholder="0" oninput="calcIPV()"></div>
+      <div class="fl"><label>Ventas</label><input type="number" id="iv" placeholder="0" oninput="calcIPV()"></div>
+      <div class="fl"><label>Bajas</label><input type="number" id="ib" placeholder="0" oninput="calcIPV()"></div>
+      <div class="fl"><label>Extracciones</label><input type="number" id="ix" placeholder="0" oninput="calcIPV()"></div>
+      <div class="fl"><label>Precio costo (CUP)</label><input type="number" id="ipc" placeholder="0" oninput="calcIPV()"></div>
+      <div class="fl"><label>Precio venta (CUP)</label><input type="number" id="ipv2" placeholder="0" oninput="calcIPV()"></div>
+    </div>
+    <div id="ppp-info" style="display:none" class="info-box"><i class="ti ti-info-circle"></i><span id="ppp-msg"></span></div>
+    <div class="calc-box">
+      <div><div class="cl">Existencia final</div><div class="cv" id="c-fin">0</div></div>
+      <div><div class="cl">Precio prom. pond. (PPP)</div><div class="cv b" id="c-ppp">0 CUP</div></div>
+      <div><div class="cl">Ganancia bruta</div><div class="cv g" id="c-gan">0 CUP</div></div>
+      <div><div class="cl">Valor en costo</div><div class="cv" id="c-vcosto">0 CUP</div></div>
+      <div><div class="cl">Perdida por bajas</div><div class="cv r" id="c-perd1">0 CUP</div></div>
+      <div><div class="cl">Perd. extracciones</div><div class="cv r" id="c-perd2">0 CUP</div></div>
+    </div>
+    <div class="fbtn"><button class="btn-p" onclick="addIPV()"><i class="ti ti-check"></i> Guardar registro</button></div>
+  </div>
+  <div class="card">
+    <div class="ct">
+      <span>IPV — <span id="ipv-tbl-lbl" style="font-weight:400;color:#aaa;text-transform:none">—</span></span>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <input type="date" id="ipv-ff" style="font-size:12px;padding:4px 8px;border:1px solid #e5e5e0;border-radius:8px" onchange="renderIPV()">
+        <button class="btn-s" style="font-size:12px;padding:5px 10px" onclick="exportTable('ipv-tbl','IPV '+ipvEmp)"><i class="ti ti-printer"></i> Exportar</button>
+      </div>
+    </div>
+    <div class="tw"><table id="ipv-tbl">
+      <thead><tr><th>Fecha</th><th>Producto</th><th>Ini</th><th>Ent</th><th>Ventas</th><th>Bajas</th><th>Extr</th><th>Final</th><th>P.Costo</th><th>PPP</th><th>P.Venta</th><th>Ganancia</th><th>Perdida</th></tr></thead>
+      <tbody id="ipv-tbody"></tbody>
+      <tfoot><tr class="tfoot-row"><td colspan="11" style="padding:8px 10px">Totales</td><td style="padding:8px 10px;color:#0F6E56" id="ipv-tot-g">0 CUP</td><td style="padding:8px 10px;color:#A32D2D" id="ipv-tot-p">0 CUP</td></tr></tfoot>
+    </table></div>
+  </div>
+</div>
+
+<!-- FACTURAS -->
+<div class="sec" id="sec-facturas">
+  <div class="card">
+    <div class="ct">Nueva factura</div>
+    <div class="fg">
+      <div class="fl"><label>Empresa</label><select id="fe"></select></div>
+      <div class="fl"><label>Tipo</label><select id="fti"><option>Emitida</option><option>Recibida</option></select></div>
+      <div class="fl"><label>Proveedor / Cliente</label><input type="text" id="fc" placeholder="Nombre"></div>
+      <div class="fl"><label>Moneda</label><select id="f-moneda" onchange="updateEquiv('f-moneda','fm','f-equiv')"></select></div>
+      <div class="fl"><label id="f-monto-lbl">Monto</label><input type="number" id="fm" placeholder="0" oninput="updateEquiv('f-moneda','fm','f-equiv')"></div>
+      <div class="fl"><label>Equiv. CUP</label><div class="equiv-box" id="f-equiv">0 CUP</div></div>
+      <div class="fl full"><label>Concepto</label><input type="text" id="fk" placeholder="Descripcion"></div>
+      <div class="fl"><label>Estado</label><select id="fs"><option>Pendiente</option><option>Pagada</option></select></div>
+    </div>
+    <div class="fbtn"><button class="btn-p" onclick="addFactura()"><i class="ti ti-check"></i> Guardar</button></div>
+  </div>
+  <div class="card">
+    <div class="ct">
+      <span>Facturas registradas</span>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <input type="date" id="fact-ff" style="font-size:12px;padding:4px 8px;border:1px solid #e5e5e0;border-radius:8px" onchange="renderFact()">
+        <button class="btn-s" style="font-size:12px;padding:5px 10px" onclick="exportTable('fact-tbl','Facturas')"><i class="ti ti-printer"></i> Exportar</button>
+      </div>
+    </div>
+    <div class="tw"><table id="fact-tbl"><thead><tr><th>Fecha</th><th>Empresa</th><th>Tipo</th><th>Cliente/Prov.</th><th>Concepto</th><th>Moneda</th><th>Monto</th><th>CUP</th><th>Estado</th></tr></thead><tbody id="fact-tbody"></tbody></table></div>
+  </div>
+</div>
+
+<!-- CUENTAS CONTABLES -->
+<div class="sec" id="sec-cuentas">
+  <div class="card">
+    <div class="ct">Nuevo asiento contable</div>
+    <div class="fg">
+      <div class="fl"><label>Empresa</label><select id="c-emp"></select></div>
+      <div class="fl"><label>Fecha</label><input type="date" id="c-fecha"></div>
+      <div class="fl"><label>Cuenta</label><select id="c-cuenta">
+        <option value="101">101 - Caja</option>
+        <option value="102">102 - Banco</option>
+        <option value="103">103 - Cuentas por cobrar</option>
+        <option value="104">104 - Inventario</option>
+        <option value="201">201 - Cuentas por pagar</option>
+        <option value="202">202 - Deudas a largo plazo</option>
+        <option value="301">301 - Capital</option>
+        <option value="401">401 - Ventas</option>
+        <option value="402">402 - Otros ingresos</option>
+        <option value="501">501 - Costo de ventas</option>
+        <option value="502">502 - Gastos operativos</option>
+        <option value="503">503 - Gastos de personal</option>
+        <option value="504">504 - Gastos financieros</option>
+        <option value="505">505 - Impuestos y contribuciones</option>
+      </select></div>
+      <div class="fl"><label>Tipo</label><select id="c-tipo"><option>Debito</option><option>Credito</option></select></div>
+      <div class="fl"><label>Monto (CUP)</label><input type="number" id="c-monto" placeholder="0"></div>
+      <div class="fl full"><label>Descripcion</label><input type="text" id="c-desc" placeholder="Descripcion del asiento"></div>
+    </div>
+    <div class="fbtn"><button class="btn-p" onclick="addAsiento()"><i class="ti ti-check"></i> Registrar asiento</button></div>
+  </div>
+  <div class="card">
+    <div class="ct">
+      <span>Libro diario</span>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <input type="date" id="c-ff" style="font-size:12px;padding:4px 8px;border:1px solid #e5e5e0;border-radius:8px" onchange="renderCuentas()">
+        <button class="btn-s" style="font-size:12px;padding:5px 10px" onclick="exportTable('cuentas-tbl','Libro Diario')"><i class="ti ti-printer"></i> Exportar</button>
+      </div>
+    </div>
+    <div class="tw"><table id="cuentas-tbl"><thead><tr><th>Fecha</th><th>Empresa</th><th>Cuenta</th><th>Descripcion</th><th>Debito</th><th>Credito</th><th>Saldo</th></tr></thead><tbody id="cuentas-tbody"></tbody></table></div>
+  </div>
+  <div class="card">
+    <div class="ct">Balance de saldos por cuenta</div>
+    <div id="balance-content"></div>
+  </div>
+</div>
+
+<!-- MONEDAS -->
+<div class="sec" id="sec-monedas">
+  <div class="info-box"><i class="ti ti-info-circle"></i>Actualiza las tasas cada dia antes de registrar en otras monedas. Todo se convierte a CUP automaticamente en los reportes.</div>
+  <div class="card">
+    <div class="ct">Tasas de cambio actuales</div>
+    <div id="tasas-content"></div>
+    <div class="divider"></div>
+    <div style="font-size:12px;font-weight:600;color:#888;margin-bottom:10px">ACTUALIZAR TASA</div>
+    <div class="fg">
+      <div class="fl"><label>Moneda</label><select id="m-sel">
+        <option value="USD">USD - Dolar americano</option>
+        <option value="MLC">MLC - Moneda libremente convertible</option>
+        <option value="EUR">EUR - Euro</option>
+      </select></div>
+      <div class="fl"><label>1 unidad = X CUP</label><input type="number" id="m-tasa" placeholder="Ej: 300" step="0.01"></div>
+    </div>
+    <div class="fbtn"><button class="btn-p" onclick="actualizarTasa()"><i class="ti ti-check"></i> Actualizar</button></div>
+  </div>
+  <div class="card">
+    <div class="ct">Agregar moneda personalizada</div>
+    <div class="fg">
+      <div class="fl"><label>Codigo (ej: GBP)</label><input type="text" id="m-cod" placeholder="GBP" maxlength="5" style="text-transform:uppercase"></div>
+      <div class="fl"><label>Nombre</label><input type="text" id="m-nom" placeholder="Libra esterlina"></div>
+      <div class="fl full"><label>Tasa inicial (1 unidad = X CUP)</label><input type="number" id="m-tasa2" placeholder="0" step="0.01"></div>
+    </div>
+    <div class="fbtn"><button class="btn-p" onclick="agregarMoneda()"><i class="ti ti-plus"></i> Agregar moneda</button></div>
+  </div>
+</div>
+
+<!-- EMPRESAS -->
 <div class="sec" id="sec-empresas">
   <div class="card">
     <div class="ct">Agregar empresa</div>
     <div class="fg">
-      <div class="fl full"><label>Nombre de la empresa</label><input type="text" id="emp-nombre" placeholder="Ej: Panadería La Gloria"></div>
-      <div class="fl"><label>Sector</label><input type="text" id="emp-sector" placeholder="Gastronomía, Comercio..."></div>
-      <div class="fl"><label>Notas</label><input type="text" id="emp-notas" placeholder="Dueño, teléfono..."></div>
+      <div class="fl full"><label>Nombre de la empresa</label><input type="text" id="emp-nom" placeholder="Ej: Panaderia La Gloria"></div>
+      <div class="fl"><label>Sector</label><input type="text" id="emp-sec" placeholder="Gastronomia, Comercio..."></div>
+      <div class="fl"><label>Notas</label><input type="text" id="emp-not" placeholder="Dueno, telefono..."></div>
     </div>
     <div class="fbtn"><button class="btn-p" onclick="addEmpresa()"><i class="ti ti-check"></i> Agregar empresa</button></div>
   </div>
@@ -165,459 +323,404 @@ tr:hover td{background:#fafaf8}
   </div>
 </div>
 
-<div class="sec" id="sec-ipv">
-  <div class="emp-tabs" id="ipv-emp-tabs"></div>
-  <div class="card">
-    <div class="ct">Registrar producto — <span id="ipv-emp-label" style="font-weight:400;color:#aaa;text-transform:none">Carpa BENDECIDA</span></div>
-    <div class="fg">
-      <div class="fl full"><label>Producto</label><input type="text" id="ip" placeholder="Nombre del producto"></div>
-      <div class="fl"><label>Existencia inicial</label><input type="number" id="ii" placeholder="0" oninput="calcIPV()"></div>
-      <div class="fl"><label>Entradas</label><input type="number" id="ien" placeholder="0" oninput="calcIPV()"></div>
-      <div class="fl"><label>Ventas</label><input type="number" id="iv" placeholder="0" oninput="calcIPV()"></div>
-      <div class="fl"><label>Bajas</label><input type="number" id="ib" placeholder="0" oninput="calcIPV()"></div>
-      <div class="fl"><label>Extracciones</label><input type="number" id="ix" placeholder="0" oninput="calcIPV()"></div>
-      <div class="fl"><label>Precio costo (CUP)</label><input type="number" id="ipc" placeholder="0" oninput="calcIPV()"></div>
-      <div class="fl"><label>Precio venta (CUP)</label><input type="number" id="ipv2" placeholder="0" oninput="calcIPV()"></div>
-    </div>
-    <div class="calc-box">
-      <div><div class="cl">Existencia final</div><div class="cv" id="c-final">0</div></div>
-      <div><div class="cl">Valor en costo</div><div class="cv" id="c-costo">0 CUP</div></div>
-      <div><div class="cl">Ganancia bruta</div><div class="cv g" id="c-gan">0 CUP</div></div>
-      <div><div class="cl">Valor en venta</div><div class="cv g" id="c-venta">0 CUP</div></div>
-      <div><div class="cl">Pérdida por bajas</div><div class="cv r" id="c-perd">0 CUP</div></div>
-      <div><div class="cl">Pérd. extracciones</div><div class="cv r" id="c-perd2">0 CUP</div></div>
-    </div>
-    <div class="fbtn"><button class="btn-p" onclick="addIPV()"><i class="ti ti-check"></i> Guardar registro</button></div>
-  </div>
-  <div class="card">
-    <div class="ct">
-      <span>IPV — <span id="ipv-tbl-label" style="font-weight:400;color:#aaa;text-transform:none">Carpa BENDECIDA</span></span>
-      <div style="display:flex;gap:8px;align-items:center">
-        <input type="date" id="ipv-fecha-filtro" style="font-size:12px;padding:4px 8px;border:1px solid #e5e5e0;border-radius:8px;color:#1a1a1a" onchange="renderIPV()">
-        <button class="btn-s" style="font-size:12px;padding:5px 10px;display:flex;align-items:center;gap:4px" onclick="exportIPV()"><i class="ti ti-printer"></i> Exportar</button>
-      </div>
-    </div>
-    <div class="tw">
-      <table id="ipv-table">
-        <thead><tr><th>Fecha</th><th>Producto</th><th>Ini</th><th>Ent</th><th>Ventas</th><th>Bajas</th><th>Extr</th><th>Final</th><th>P.Costo</th><th>P.Venta</th><th>Ganancia</th><th>Pérdida</th></tr></thead>
-        <tbody id="ipv-tbody"></tbody>
-        <tfoot><tr class="tfoot-row"><td colspan="10" style="padding:8px 10px;font-size:12px">Totales</td><td style="padding:8px 10px;font-size:12px;color:#0F6E56" id="ipv-tot-g">0 CUP</td><td style="padding:8px 10px;font-size:12px;color:#A32D2D" id="ipv-tot-p">0 CUP</td></tr></tfoot>
-      </table>
-    </div>
-  </div>
-</div>
-
-<div class="sec" id="sec-facturas">
-  <div class="card">
-    <div class="ct">Nueva factura</div>
-    <div class="fg">
-      <div class="fl"><label>Empresa</label><select id="fe"></select></div>
-      <div class="fl"><label>Tipo</label><select id="fti"><option>Emitida</option><option>Recibida</option></select></div>
-      <div class="fl"><label>Proveedor / Cliente</label><input type="text" id="fc" placeholder="Nombre"></div>
-      <div class="fl"><label>Monto (CUP)</label><input type="number" id="fm" placeholder="0"></div>
-      <div class="fl full"><label>Concepto</label><input type="text" id="fk" placeholder="Descripción"></div>
-      <div class="fl"><label>Estado</label><select id="fs"><option>Pendiente</option><option>Pagada</option></select></div>
-    </div>
-    <div class="fbtn"><button class="btn-p" onclick="addFactura()"><i class="ti ti-check"></i> Guardar factura</button></div>
-  </div>
-  <div class="card">
-    <div class="ct">
-      <span>Facturas registradas</span>
-      <div style="display:flex;gap:8px;align-items:center">
-        <input type="date" id="fact-fecha-filtro" style="font-size:12px;padding:4px 8px;border:1px solid #e5e5e0;border-radius:8px;color:#1a1a1a" onchange="renderFact()">
-        <button class="btn-s" style="font-size:12px;padding:5px 10px;display:flex;align-items:center;gap:4px" onclick="exportFact()"><i class="ti ti-printer"></i> Exportar</button>
-      </div>
-    </div>
-    <div class="tw"><table id="fact-table"><thead><tr><th>Fecha</th><th>Empresa</th><th>Tipo</th><th>Cliente/Prov.</th><th>Concepto</th><th>Monto</th><th>Estado</th></tr></thead><tbody id="fact-tbody"></tbody></table></div>
-  </div>
-</div>
-
 </div>
 </div>
 
 <script>
 var SCRIPT_URL='https://script.google.com/macros/s/AKfycbylvub1T5i_6WcH-dckEdPzi3ABCcGuvqD35oOxaPc3pIrrePN88a_T1gBtebgE2l0m/exec';
-
-var trans=[],ipvData={},facts=[],empresas=[];
+var trans=[],ipvData={},facts=[],asientos=[],empresas=[],monedas={},pppStore={};
 var empActual='TODAS',perActual='hoy',ipvEmp='';
-var EMP_COLORS_LIST=['#1D9E75','#378ADD','#D85A30','#9B59B6','#E67E22','#E91E63'];
+var COLORS=['#1D9E75','#378ADD','#D85A30','#9B59B6','#E67E22','#E91E63','#16A085'];
 var EMP_COLORS={};
 
-// Load empresas from localStorage or use defaults
-function loadEmpresas(){
-  var saved=localStorage.getItem('mipymes_empresas');
-  if(saved){
-    empresas=JSON.parse(saved);
-  } else {
-    empresas=[
-      {nombre:'Carpa BENDECIDA',sector:'Gastronomía',notas:''},
-      {nombre:'Terraza BENDECIDA',sector:'Gastronomía',notas:''},
-      {nombre:'Mercadito BENDECIDO',sector:'Comercio',notas:''}
-    ];
-    saveEmpresas();
-  }
-  empresas.forEach(function(e,i){ EMP_COLORS[e.nombre]=EMP_COLORS_LIST[i%EMP_COLORS_LIST.length]; });
-  if(empresas.length>0&&!ipvEmp) ipvEmp=empresas[0].nombre;
-  renderEmpresasTabs();
-  renderEmpresasList();
-  renderEmpresasSelects();
-}
-
-function saveEmpresas(){
-  localStorage.setItem('mipymes_empresas',JSON.stringify(empresas));
-}
-
-function addEmpresa(){
-  var nombre=gv('emp-nombre').trim();
-  if(!nombre)return;
-  var sector=gv('emp-sector'),notas=gv('emp-notas');
-  empresas.push({nombre:nombre,sector:sector,notas:notas});
-  EMP_COLORS[nombre]=EMP_COLORS_LIST[(empresas.length-1)%EMP_COLORS_LIST.length];
-  saveEmpresas();
-  appendToSheet('EMPRESAS',[empresas.length,nombre,sector,notas]);
-  document.getElementById('emp-nombre').value='';
-  document.getElementById('emp-sector').value='';
-  document.getElementById('emp-notas').value='';
-  renderEmpresasTabs();
-  renderEmpresasList();
-  renderEmpresasSelects();
-  renderRes();
-}
-
-function removeEmpresa(idx){
-  if(!confirm('¿Eliminar '+empresas[idx].nombre+'? Esto no borra sus datos históricos.'))return;
-  empresas.splice(idx,1);
-  saveEmpresas();
-  renderEmpresasTabs();
-  renderEmpresasList();
-  renderEmpresasSelects();
-  renderRes();
-}
-
-function renderEmpresasTabs(){
-  // Resumen tabs
-  var resTab=document.getElementById('res-emp-tabs');
-  if(resTab){
-    resTab.innerHTML='<button class="et on" onclick="setEmp(this,\'TODAS\')">Todas</button>';
-    empresas.forEach(function(e){
-      resTab.innerHTML+='<button class="et" onclick="setEmp(this,\''+e.nombre+'\')">'+e.nombre.split(' ')[0]+'</button>';
-    });
-  }
-  // IPV tabs
-  var ipvTab=document.getElementById('ipv-emp-tabs');
-  if(ipvTab){
-    ipvTab.innerHTML='';
-    empresas.forEach(function(e,i){
-      var cls=i===0?'et on':'et';
-      ipvTab.innerHTML+='<button class="'+cls+'" onclick="setIPVemp(this,\''+e.nombre+'\')">'+e.nombre.split(' ')[0]+'</button>';
-    });
-    if(empresas.length>0){
-      ipvEmp=empresas[0].nombre;
-      document.getElementById('ipv-emp-label').textContent=ipvEmp;
-      document.getElementById('ipv-tbl-label').textContent=ipvEmp;
-    }
-  }
-}
-
-function renderEmpresasList(){
-  var lista=document.getElementById('emp-lista');
-  if(!lista)return;
-  if(!empresas.length){lista.innerHTML='<div class="empty"><i class="ti ti-inbox"></i>Sin empresas registradas</div>';return;}
-  lista.innerHTML=empresas.map(function(e,i){
-    return '<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid #f0f0eb">'
-      +'<div style="display:flex;align-items:center;gap:10px"><div style="width:10px;height:10px;border-radius:50%;background:'+(EMP_COLORS[e.nombre]||'#888')+'"></div>'
-      +'<div><div style="font-size:13px;font-weight:600">'+e.nombre+'</div><div style="font-size:11px;color:#888">'+e.sector+(e.notas?' · '+e.notas:'')+'</div></div></div>'
-      +'<button onclick="removeEmpresa('+i+')" style="background:none;border:none;color:#A32D2D;cursor:pointer;font-size:12px"><i class="ti ti-trash"></i></button>'
-      +'</div>';
-  }).join('');
-}
-
-function renderEmpresasSelects(){
-  var opts=empresas.map(function(e){return '<option>'+e.nombre+'</option>';}).join('');
-  ['te','fe'].forEach(function(id){
-    var el=document.getElementById(id);
-    if(el) el.innerHTML=opts;
-  });
-}
-
+// INIT
 var hoy=new Date();
 document.getElementById('fecha-hoy').textContent=hoy.toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long'});
 
-function fmt(n){return Math.round(n).toLocaleString('es-ES')+' CUP';}
-function gv(id){return document.getElementById(id).value;}
-function fdate(d){return new Date(d).toLocaleDateString('es-ES',{day:'2-digit',month:'2-digit',year:'2-digit'});}
+function init(){
+  var sp=localStorage.getItem('mipymes_ppp');
+  if(sp)try{pppStore=JSON.parse(sp);}catch(e){}
+  loadMonedas();
+  loadEmpresas();
+  document.getElementById('c-fecha').value=hoy.toISOString().split('T')[0];
+}
 
+// MONEDAS
+function loadMonedas(){
+  var s=localStorage.getItem('mipymes_monedas');
+  monedas=s?JSON.parse(s):{CUP:{nom:'Peso cubano',tasa:1,base:true},USD:{nom:'Dolar americano',tasa:300},MLC:{nom:'Moneda libremente convertible',tasa:300},EUR:{nom:'Euro',tasa:320}};
+  saveMon();renderTasas();renderMonSelects();
+}
+function saveMon(){localStorage.setItem('mipymes_monedas',JSON.stringify(monedas));}
+
+function actualizarTasa(){
+  var cod=document.getElementById('m-sel').value,tasa=Number(document.getElementById('m-tasa').value);
+  if(!tasa)return;
+  monedas[cod].tasa=tasa;saveMon();renderTasas();renderMonSelects();
+  showStatus('Tasa de '+cod+' actualizada: 1 = '+tasa+' CUP','ok');
+  document.getElementById('m-tasa').value='';
+}
+
+function agregarMoneda(){
+  var cod=document.getElementById('m-cod').value.trim().toUpperCase();
+  var nom=document.getElementById('m-nom').value.trim();
+  var tasa=Number(document.getElementById('m-tasa2').value);
+  if(!cod||!nom||!tasa)return;
+  monedas[cod]={nom,tasa};saveMon();renderTasas();renderMonSelects();
+  var sel=document.getElementById('m-sel');
+  var o=document.createElement('option');o.value=cod;o.textContent=cod+' - '+nom;sel.appendChild(o);
+  showStatus('Moneda '+cod+' agregada','ok');
+  document.getElementById('m-cod').value='';document.getElementById('m-nom').value='';document.getElementById('m-tasa2').value='';
+}
+
+function renderTasas(){
+  var html='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px">';
+  Object.keys(monedas).forEach(function(c){
+    var m=monedas[c];
+    html+='<div style="background:#f8f8f5;border:1px solid #e5e5e0;border-radius:10px;padding:12px">';
+    html+='<div style="font-size:15px;font-weight:700">'+c+'</div>';
+    html+='<div style="font-size:11px;color:#888;margin-bottom:6px">'+m.nom+'</div>';
+    html+='<div style="font-size:14px;font-weight:600;color:#1D9E75">1 '+c+' = '+(m.base?'base':m.tasa+' CUP')+'</div>';
+    html+='</div>';
+  });
+  html+='</div>';
+  document.getElementById('tasas-content').innerHTML=html;
+}
+
+function renderMonSelects(){
+  var opts=Object.keys(monedas).map(function(c){return '<option value="'+c+'">'+c+'</option>';}).join('');
+  ['t-moneda','f-moneda'].forEach(function(id){var el=document.getElementById(id);if(el){el.innerHTML=opts;el.value='CUP';}});
+}
+
+function toCUP(monto,moneda){
+  if(!moneda||moneda==='CUP')return Number(monto)||0;
+  var m=monedas[moneda];return m?(Number(monto)||0)*m.tasa:Number(monto)||0;
+}
+
+function updateEquiv(monSel,montoId,equivId){
+  var mon=document.getElementById(monSel).value;
+  var monto=Number(document.getElementById(montoId).value)||0;
+  var cup=toCUP(monto,mon);
+  document.getElementById(equivId).textContent=Math.round(cup).toLocaleString('es-ES')+' CUP';
+  if(monSel==='t-moneda')calcComision();
+}
+
+// PAGOS/COMISION
+function toggleComision(){
+  var met=document.getElementById('t-metodo').value;
+  var show=met!=='efectivo';
+  document.getElementById('pct-field').style.display=show?'flex':'none';
+  document.getElementById('pct-monto').style.display=show?'flex':'none';
+}
+
+function calcComision(){
+  var monto=Number(document.getElementById('tm').value)||0;
+  var mon=document.getElementById('t-moneda').value;
+  var pct=Number(document.getElementById('t-pct').value)||0;
+  var cup=toCUP(monto,mon);
+  var com=cup*pct/100;
+  document.getElementById('t-com-val').textContent=Math.round(com).toLocaleString('es-ES')+' CUP';
+}
+
+// EMPRESAS
+function loadEmpresas(){
+  var s=localStorage.getItem('mipymes_empresas');
+  empresas=s?JSON.parse(s):[{nom:'Carpa BENDECIDA',sec:'Gastronomia',not:''},{nom:'Terraza BENDECIDA',sec:'Gastronomia',not:''},{nom:'Mercadito BENDECIDO',sec:'Comercio',not:''}];
+  saveEmp();
+  empresas.forEach(function(e,i){EMP_COLORS[e.nom]=COLORS[i%COLORS.length];});
+  if(empresas.length&&!ipvEmp)ipvEmp=empresas[0].nom;
+  renderEmpTabs();renderEmpLista();renderEmpSels();
+  document.getElementById('logo-sub').textContent=empresas.length+' empresa'+(empresas.length!==1?'s':'')+' registradas';
+}
+function saveEmp(){localStorage.setItem('mipymes_empresas',JSON.stringify(empresas));}
+
+function addEmpresa(){
+  var nom=document.getElementById('emp-nom').value.trim();if(!nom)return;
+  var sec=document.getElementById('emp-sec').value,not=document.getElementById('emp-not').value;
+  empresas.push({nom,sec,not});
+  EMP_COLORS[nom]=COLORS[(empresas.length-1)%COLORS.length];
+  saveEmp();appendToSheet('EMPRESAS',[empresas.length,nom,sec,not]);
+  document.getElementById('emp-nom').value='';document.getElementById('emp-sec').value='';document.getElementById('emp-not').value='';
+  renderEmpTabs();renderEmpLista();renderEmpSels();renderRes();
+  document.getElementById('logo-sub').textContent=empresas.length+' empresa'+(empresas.length!==1?'s':'')+' registradas';
+}
+
+function removeEmpresa(i){
+  if(!confirm('Eliminar '+empresas[i].nom+'? Sus datos historicos se conservan.'))return;
+  empresas.splice(i,1);saveEmp();renderEmpTabs();renderEmpLista();renderEmpSels();renderRes();
+}
+
+function renderEmpTabs(){
+  var r=document.getElementById('res-emp-tabs');
+  if(r){r.innerHTML='<button class="et on" onclick="setEmp(this,\'TODAS\')">Todas</button>';empresas.forEach(function(e){r.innerHTML+='<button class="et" onclick="setEmp(this,\''+e.nom+'\')">'+e.nom.split(' ')[0]+'</button>';});}
+  var iv=document.getElementById('ipv-emp-tabs');
+  if(iv){iv.innerHTML='';empresas.forEach(function(e,i){iv.innerHTML+='<button class="'+(i===0?'et on':'et')+'" onclick="setIPVemp(this,\''+e.nom+'\')">'+e.nom.split(' ')[0]+'</button>';});
+    if(empresas.length){ipvEmp=empresas[0].nom;document.getElementById('ipv-emp-lbl').textContent=ipvEmp;document.getElementById('ipv-tbl-lbl').textContent=ipvEmp;}}
+}
+
+function renderEmpLista(){
+  var l=document.getElementById('emp-lista');if(!l)return;
+  if(!empresas.length){l.innerHTML='<div class="empty"><i class="ti ti-inbox"></i>Sin empresas</div>';return;}
+  l.innerHTML=empresas.map(function(e,i){return '<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid #f0f0eb"><div style="display:flex;align-items:center;gap:10px"><div style="width:10px;height:10px;border-radius:50%;background:'+(EMP_COLORS[e.nom]||'#888')+'"></div><div><div style="font-size:13px;font-weight:600">'+e.nom+'</div><div style="font-size:11px;color:#888">'+e.sec+(e.not?' · '+e.not:'')+'</div></div></div><button onclick="removeEmpresa('+i+')" style="background:none;border:none;color:#A32D2D;cursor:pointer"><i class="ti ti-trash"></i></button></div>';}).join('');
+}
+
+function renderEmpSels(){
+  var opts=empresas.map(function(e){return '<option>'+e.nom+'</option>';}).join('');
+  ['te','fe','c-emp'].forEach(function(id){var el=document.getElementById(id);if(el)el.innerHTML=opts;});
+}
+
+// NAVEGACION
 function showSec(id,btn){
   document.querySelectorAll('.sec').forEach(function(s){s.classList.remove('on');});
   document.getElementById('sec-'+id).classList.add('on');
   document.querySelectorAll('.nb').forEach(function(b){b.classList.remove('on');});
   btn.classList.add('on');
-  if(id==='resumen')renderRes();
-  if(id==='trans')renderTrans();
-  if(id==='ipv')renderIPV();
-  if(id==='facturas')renderFact();
-  if(id==='empresas'){renderEmpresasList();}
+  var map={resumen:renderRes,trans:renderTrans,ipv:renderIPV,facturas:renderFact,cuentas:function(){renderCuentas();renderBalance();},monedas:renderTasas,empresas:renderEmpLista};
+  if(map[id])map[id]();
 }
+function setEmp(btn,emp){document.querySelectorAll('#res-emp-tabs .et').forEach(function(b){b.classList.remove('on');});btn.classList.add('on');empActual=emp;renderRes();}
+function setPer(btn,per){document.querySelectorAll('.per-tabs .pt').forEach(function(b){b.classList.remove('on');});btn.classList.add('on');perActual=per;renderRes();}
+function setIPVemp(btn,emp){document.querySelectorAll('#ipv-emp-tabs .et').forEach(function(b){b.classList.remove('on');});btn.classList.add('on');ipvEmp=emp;document.getElementById('ipv-emp-lbl').textContent=emp;document.getElementById('ipv-tbl-lbl').textContent=emp;renderIPV();}
 
-function setEmp(btn,emp){
-  document.querySelectorAll('#sec-resumen .emp-tabs .et').forEach(function(b){b.classList.remove('on');});
-  btn.classList.add('on');empActual=emp;renderRes();
-}
-function setPer(btn,per){
-  document.querySelectorAll('.per-tabs .pt').forEach(function(b){b.classList.remove('on');});
-  btn.classList.add('on');perActual=per;renderRes();
-}
-function setIPVemp(btn,emp){
-  document.querySelectorAll('#ipv-emp-tabs .et').forEach(function(b){b.classList.remove('on');});
-  btn.classList.add('on');ipvEmp=emp;
-  document.getElementById('ipv-emp-label').textContent=emp;
-  document.getElementById('ipv-tbl-label').textContent=emp;
-  renderIPV();
-}
+// HELPERS
+function fmt(n){return Math.round(n).toLocaleString('es-ES')+' CUP';}
+function gv(id){return document.getElementById(id).value;}
+function fd(d){return new Date(d).toLocaleDateString('es-ES',{day:'2-digit',month:'2-digit',year:'2-digit'});}
+function inP(d){var dt=new Date(d),n=new Date();if(perActual==='hoy')return dt.toDateString()===n.toDateString();if(perActual==='semana'){var s=new Date(n);s.setDate(n.getDate()-n.getDay()+1);s.setHours(0,0,0,0);return dt>=s&&dt<=n;}if(perActual==='mes')return dt.getMonth()===n.getMonth()&&dt.getFullYear()===n.getFullYear();return true;}
+function filtDate(arr,ffId){var ff=document.getElementById(ffId).value;return ff?arr.filter(function(r){return fd(r.fecha)===fd(new Date(ff+'T12:00:00'));}):arr;}
 
-function inPeriod(d){
-  var dt=new Date(d),now=new Date();
-  if(perActual==='hoy'){return dt.toDateString()===now.toDateString();}
-  if(perActual==='semana'){var s=new Date(now);s.setDate(now.getDate()-now.getDay()+1);s.setHours(0,0,0,0);return dt>=s&&dt<=now;}
-  if(perActual==='mes'){return dt.getMonth()===now.getMonth()&&dt.getFullYear()===now.getFullYear();}
-  return true;
-}
-
+// RESUMEN
 function calcEmp(emp){
-  var t=trans.filter(function(x){return(emp==='TODAS'||x.empresa===emp)&&inPeriod(x.fecha);});
-  var ing=t.filter(function(x){return x.tipo==='Ingreso';}).reduce(function(a,x){return a+Number(x.monto);},0);
-  var gas=t.filter(function(x){return x.tipo==='Gasto';}).reduce(function(a,x){return a+Number(x.monto);},0);
-  var ipvArr=[];
-  if(emp==='TODAS'){Object.keys(ipvData).forEach(function(e){ipvArr=ipvArr.concat(ipvData[e]);});}
-  else{ipvArr=ipvData[emp]||[];}
-  var ganIPV=ipvArr.reduce(function(a,r){return a+r.ganancia;},0);
-  var perdIPV=ipvArr.reduce(function(a,r){return a+r.perdida;},0);
-  var fPend=facts.filter(function(f){return(emp==='TODAS'||f.empresa===emp)&&f.estado==='Pendiente';}).reduce(function(a,f){return a+Number(f.monto);},0);
-  return{ing,gas,gan:ing-gas+ganIPV,ganIPV,perdIPV,fPend};
+  var t=trans.filter(function(x){return(emp==='TODAS'||x.emp===emp)&&inP(x.fecha);});
+  var ing=t.filter(function(x){return x.tipo==='Ingreso';}).reduce(function(a,x){return a+x.cup;},0);
+  var gas=t.filter(function(x){return x.tipo==='Gasto';}).reduce(function(a,x){return a+x.cup;},0);
+  var com=t.reduce(function(a,x){return a+(x.com||0);},0);
+  var ia=emp==='TODAS'?Object.keys(ipvData).reduce(function(a,k){return a.concat(ipvData[k]);},[]):ipvData[emp]||[];
+  var ganIPV=ia.reduce(function(a,r){return a+r.gan;},0);
+  var perdIPV=ia.reduce(function(a,r){return a+r.perd;},0);
+  var fPend=facts.filter(function(f){return(emp==='TODAS'||f.emp===emp)&&f.estado==='Pendiente';}).reduce(function(a,f){return a+f.cup;},0);
+  return{ing,gas,gan:ing-gas+ganIPV,ganIPV,perdIPV,fPend,com};
 }
 
 function renderRes(){
-  var emps=empActual==='TODAS'?empresas.map(function(e){return e.nombre;}):[empActual];
+  var emps=empActual==='TODAS'?empresas.map(function(e){return e.nom;}):[empActual];
   var html='';
   emps.forEach(function(emp){
-    var r=calcEmp(emp);
-    var col=EMP_COLORS[emp]||'#1D9E75';
-    html+='<div class="emp-section">';
-    html+='<div class="emp-header"><div class="emp-dot" style="background:'+col+'"></div><div class="emp-name">'+emp+'</div></div>';
-    html+='<div class="metrics">';
+    var r=calcEmp(emp),col=EMP_COLORS[emp]||'#1D9E75';
+    html+='<div class="emp-section"><div class="emp-header"><div class="emp-dot" style="background:'+col+'"></div><div class="emp-name">'+emp+'</div></div><div class="metrics">';
     html+='<div class="metric"><div class="ml"><i class="ti ti-trending-up" style="color:#0F6E56"></i>Ingresos</div><div class="mv g">'+fmt(r.ing)+'</div></div>';
     html+='<div class="metric"><div class="ml"><i class="ti ti-trending-down" style="color:#A32D2D"></i>Gastos</div><div class="mv r">'+fmt(r.gas)+'</div></div>';
     html+='<div class="metric"><div class="ml"><i class="ti ti-currency-dollar"></i>Ganancia neta</div><div class="mv '+(r.gan>=0?'g':'r')+'">'+fmt(r.gan)+'</div></div>';
     html+='<div class="metric"><div class="ml"><i class="ti ti-package" style="color:#0F6E56"></i>Gan. IPV</div><div class="mv g">'+fmt(r.ganIPV)+'</div></div>';
-    html+='<div class="metric"><div class="ml"><i class="ti ti-alert-triangle" style="color:#A32D2D"></i>Pérdidas</div><div class="mv r">'+fmt(r.perdIPV)+'</div></div>';
+    html+='<div class="metric"><div class="ml"><i class="ti ti-alert-triangle" style="color:#A32D2D"></i>Perdidas</div><div class="mv r">'+fmt(r.perdIPV)+'</div></div>';
+    html+='<div class="metric"><div class="ml"><i class="ti ti-credit-card" style="color:#A32D2D"></i>Comisiones</div><div class="mv r">'+fmt(r.com)+'</div></div>';
     html+='<div class="metric"><div class="ml"><i class="ti ti-file-invoice"></i>Fact. pendientes</div><div class="mv">'+fmt(r.fPend)+'</div></div>';
     html+='</div></div>';
   });
   if(empActual==='TODAS'){
     var tot=calcEmp('TODAS');
-    html+='<div class="total-card"><div class="ct">Total general — todas las empresas</div><div class="metrics">';
-    html+='<div class="metric"><div class="ml">Ingresos totales</div><div class="mv g">'+fmt(tot.ing)+'</div></div>';
-    html+='<div class="metric"><div class="ml">Gastos totales</div><div class="mv r">'+fmt(tot.gas)+'</div></div>';
-    html+='<div class="metric"><div class="ml">Ganancia total</div><div class="mv '+(tot.gan>=0?'g':'r')+'">'+fmt(tot.gan)+'</div></div>';
-    html+='</div></div>';
+    html+='<div class="total-card"><div class="ct">Total general</div><div class="metrics"><div class="metric"><div class="ml">Ingresos totales</div><div class="mv g">'+fmt(tot.ing)+'</div></div><div class="metric"><div class="ml">Gastos totales</div><div class="mv r">'+fmt(tot.gas)+'</div></div><div class="metric"><div class="ml">Ganancia total</div><div class="mv '+(tot.gan>=0?'g':'r')+'">'+fmt(tot.gan)+'</div></div></div></div>';
   }
-  document.getElementById('res-content').innerHTML=html||'<div class="empty"><i class="ti ti-inbox"></i>Sin datos para este período</div>';
+  document.getElementById('res-content').innerHTML=html||'<div class="empty"><i class="ti ti-inbox"></i>Sin datos para este periodo</div>';
 }
 
+// TRANSACCIONES
 function addTrans(){
-  var emp=gv('te'),tipo=gv('tt'),cat=gv('tc'),monto=gv('tm'),kon=gv('tk');
+  var emp=gv('te'),tipo=gv('tt'),cat=gv('tc'),monto=Number(gv('tm'))||0,kon=gv('tk');
+  var mon=gv('t-moneda'),met=gv('t-metodo'),pct=Number(gv('t-pct'))||0;
   if(!monto||!cat)return;
-  var row={fecha:new Date(),empresa:emp,tipo:tipo,categoria:cat,monto:Number(monto),concepto:kon};
+  var cup=toCUP(monto,mon),com=met!=='efectivo'?cup*pct/100:0;
+  var row={fecha:new Date(),emp,tipo,cat,monto,mon,cup,met,com,kon};
   trans.push(row);
-  document.getElementById('tc').value='';document.getElementById('tm').value='';document.getElementById('tk').value='';
-  appendToSheet('TRANSACCIONES',[fdate(row.fecha),emp,tipo,cat,kon,monto]);
+  ['tc','tm','tk','t-pct'].forEach(function(id){document.getElementById(id).value='';});
+  document.getElementById('t-equiv').textContent='0 CUP';document.getElementById('t-com-val').textContent='0 CUP';
+  appendToSheet('TRANSACCIONES',[fd(row.fecha),emp,tipo,cat,kon,monto,mon,Math.round(cup),met,Math.round(com)]);
   renderTrans();renderRes();
 }
 
 function renderTrans(){
+  var datos=filtDate(trans,'trans-ff');
   var tb=document.getElementById('trans-tbody');
-  var fechaFiltro=document.getElementById('trans-fecha-filtro').value;
-  var datos=trans.slice();
-  if(fechaFiltro) datos=datos.filter(function(t){return fdate(t.fecha)===fdate(new Date(fechaFiltro+'T12:00:00'));});
-  document.getElementById('trans-count').textContent='('+datos.length+' registros)';
-  if(!datos.length){tb.innerHTML='<tr><td colspan="6" class="empty"><i class="ti ti-inbox"></i>Sin transacciones</td></tr>';return;}
+  document.getElementById('trans-count').textContent='('+datos.length+')';
+  if(!datos.length){tb.innerHTML='<tr><td colspan="9" class="empty"><i class="ti ti-inbox"></i>Sin transacciones</td></tr>';return;}
   tb.innerHTML=datos.slice().reverse().map(function(t){
-    return '<tr><td>'+fdate(t.fecha)+'</td><td style="color:'+(EMP_COLORS[t.empresa]||'#888')+';font-weight:600">'+t.empresa.split(' ')[0]+'</td><td><span class="badge '+(t.tipo==='Ingreso'?'bg':'br')+'">'+t.tipo+'</span></td><td>'+t.categoria+'</td><td>'+t.concepto+'</td><td style="font-weight:700">'+fmt(t.monto)+'</td></tr>';
+    var mb=t.met==='efectivo'?'<span class="badge bg">Efectivo</span>':t.met==='transferencia'?'<span class="badge bp">Transf.</span>':t.met==='tarjeta'?'<span class="badge ba">Tarjeta</span>':'<span class="badge bp">Electronico</span>';
+    return '<tr><td>'+fd(t.fecha)+'</td><td style="color:'+(EMP_COLORS[t.emp]||'#888')+';font-weight:600">'+t.emp.split(' ')[0]+'</td><td><span class="badge '+(t.tipo==='Ingreso'?'bg':'br')+'">'+t.tipo+'</span></td><td>'+t.cat+'</td><td>'+mb+'</td><td>'+t.kon+'</td><td>'+t.monto+' <span class="moneda-badge">'+t.mon+'</span></td><td style="color:#A32D2D">'+(t.com?fmt(t.com):'—')+'</td><td style="font-weight:700">'+fmt(t.cup)+'</td></tr>';
   }).join('');
 }
 
-function exportTrans(){
-  var fecha=document.getElementById('trans-fecha-filtro').value||new Date().toLocaleDateString('es-ES');
-  var titulo='Transacciones — '+fecha;
-  exportTable('trans-table',titulo);
-}
-
-function exportFact(){
-  var fecha=document.getElementById('fact-fecha-filtro').value||new Date().toLocaleDateString('es-ES');
-  var titulo='Facturas — '+fecha;
-  exportTable('fact-table',titulo);
-}
-
-function exportTable(tableId, titulo){
-  var tabla=document.getElementById(tableId).outerHTML;
-  var html='<html><head><meta charset="UTF-8"><title>'+titulo+'</title><style>body{font-family:Arial,sans-serif;padding:20px}h2{color:#1D9E75;margin-bottom:16px}table{border-collapse:collapse;width:100%}th{background:#1D9E75;color:#fff;padding:8px;text-align:left;font-size:12px}td{padding:8px;border-bottom:1px solid #eee;font-size:12px}.badge{padding:2px 6px;border-radius:10px;font-size:11px}</style></head><body><h2>'+titulo+'</h2>'+tabla+'</body></html>';
-  var win=window.open('','_blank');
-  win.document.write(html);
-  win.document.close();
-  win.print();
+// IPV + PPP
+function buscarPPP(){
+  var prod=document.getElementById('ip').value.trim(),key=ipvEmp+'::'+prod;
+  var info=document.getElementById('ppp-info');
+  if(pppStore[key]){
+    info.style.display='flex';
+    document.getElementById('ppp-msg').textContent='PPP anterior: '+pppStore[key].ppp.toFixed(2)+' CUP (stock: '+pppStore[key].cant+' unid.)';
+    document.getElementById('ipc').value=pppStore[key].ppp.toFixed(2);
+    calcIPV();
+  } else info.style.display='none';
 }
 
 function calcIPV(){
   var ini=Number(gv('ii'))||0,ent=Number(gv('ien'))||0,ven=Number(gv('iv'))||0,baj=Number(gv('ib'))||0,ext=Number(gv('ix'))||0,pc=Number(gv('ipc'))||0,pv=Number(gv('ipv2'))||0;
   var fin=ini+ent-ven-baj-ext;
-  var gan=ven*(pv-pc),perdBaj=baj*pc,perdExt=ext*pc,vcosto=fin*pc,vventa=ven*pv;
-  document.getElementById('c-final').textContent=Math.round(fin);
-  document.getElementById('c-costo').textContent=fmt(vcosto);
-  document.getElementById('c-gan').textContent=fmt(gan);
-  document.getElementById('c-venta').textContent=fmt(vventa);
-  document.getElementById('c-perd').textContent=fmt(perdBaj);
-  document.getElementById('c-perd2').textContent=fmt(perdExt);
+  var prod=document.getElementById('ip').value.trim(),key=ipvEmp+'::'+prod;
+  var pppA=pppStore[key]?pppStore[key].ppp:pc,cA=pppStore[key]?pppStore[key].cant:ini;
+  var ppp=(cA>0||ent>0)?(cA*pppA+ent*pc)/(cA+ent):pc;
+  document.getElementById('c-fin').textContent=Math.round(fin);
+  document.getElementById('c-ppp').textContent=ppp.toFixed(2)+' CUP';
+  document.getElementById('c-gan').textContent=fmt(ven*(pv-ppp));
+  document.getElementById('c-vcosto').textContent=fmt(fin*ppp);
+  document.getElementById('c-perd1').textContent=fmt(baj*ppp);
+  document.getElementById('c-perd2').textContent=fmt(ext*ppp);
 }
 
 function addIPV(){
   var prod=gv('ip');if(!prod)return;
   var ini=Number(gv('ii'))||0,ent=Number(gv('ien'))||0,ven=Number(gv('iv'))||0,baj=Number(gv('ib'))||0,ext=Number(gv('ix'))||0,pc=Number(gv('ipc'))||0,pv=Number(gv('ipv2'))||0;
-  var fin=ini+ent-ven-baj-ext,gan=ven*(pv-pc),perd=(baj+ext)*pc;
+  var fin=ini+ent-ven-baj-ext;
+  var key=ipvEmp+'::'+prod;
+  var pppA=pppStore[key]?pppStore[key].ppp:pc,cA=pppStore[key]?pppStore[key].cant:ini;
+  var ppp=(cA>0||ent>0)?(cA*pppA+ent*pc)/(cA+ent):pc;
+  var gan=ven*(pv-ppp),perd=(baj+ext)*ppp;
+  pppStore[key]={ppp,cant:fin};localStorage.setItem('mipymes_ppp',JSON.stringify(pppStore));
   if(!ipvData[ipvEmp])ipvData[ipvEmp]=[];
-  var row={fecha:new Date(),producto:prod,ini:ini,ent:ent,ven:ven,baj:baj,ext:ext,fin:fin,pc:pc,pv:pv,ganancia:gan,perdida:perd};
-  ipvData[ipvEmp].push(row);
+  ipvData[ipvEmp].push({fecha:new Date(),prod,ini,ent,ven,baj,ext,fin,pc,ppp,pv,gan,perd});
   ['ip','ii','ien','iv','ib','ix','ipc','ipv2'].forEach(function(id){document.getElementById(id).value='';});
-  calcIPV();
-  appendToSheet('IPV',[fdate(row.fecha),ipvEmp,prod,ini,ent,ven,baj,ext,fin,pc,pv,Math.round(gan),Math.round(perd)]);
+  document.getElementById('ppp-info').style.display='none';calcIPV();
+  appendToSheet('IPV',[fd(new Date()),ipvEmp,prod,ini,ent,ven,baj,ext,fin,pc,ppp.toFixed(2),pv,Math.round(gan),Math.round(perd)]);
   renderIPV();renderRes();
 }
 
 function renderIPV(){
-  var datos=ipvData[ipvEmp]||[];
-  var fechaFiltro=document.getElementById('ipv-fecha-filtro').value;
-  if(fechaFiltro){
-    datos=datos.filter(function(r){return fdate(r.fecha)===fdate(new Date(fechaFiltro+'T12:00:00'));});
-  }
+  var datos=filtDate(ipvData[ipvEmp]||[],'ipv-ff').map(function(r){return r;});
   var tb=document.getElementById('ipv-tbody');
-  if(!datos.length){tb.innerHTML='<tr><td colspan="12" class="empty"><i class="ti ti-inbox"></i>Sin registros</td></tr>';document.getElementById('ipv-tot-g').textContent='0 CUP';document.getElementById('ipv-tot-p').textContent='0 CUP';return;}
+  if(!datos.length){tb.innerHTML='<tr><td colspan="13" class="empty"><i class="ti ti-inbox"></i>Sin registros</td></tr>';document.getElementById('ipv-tot-g').textContent='0 CUP';document.getElementById('ipv-tot-p').textContent='0 CUP';return;}
   var tg=0,tp=0;
-  tb.innerHTML=datos.map(function(r){tg+=r.ganancia;tp+=r.perdida;
-    return '<tr><td>'+fdate(r.fecha)+'</td><td style="font-weight:600">'+r.producto+'</td><td>'+r.ini+'</td><td>'+r.ent+'</td><td>'+r.ven+'</td><td>'+r.baj+'</td><td>'+r.ext+'</td><td style="font-weight:700">'+r.fin+'</td><td>'+fmt(r.pc)+'</td><td>'+fmt(r.pv)+'</td><td style="color:#0F6E56;font-weight:700">'+fmt(r.ganancia)+'</td><td style="color:#A32D2D">'+fmt(r.perdida)+'</td></tr>';
+  tb.innerHTML=datos.map(function(r){tg+=r.gan;tp+=r.perd;
+    return '<tr><td>'+fd(r.fecha)+'</td><td style="font-weight:600">'+r.prod+'</td><td>'+r.ini+'</td><td>'+r.ent+'</td><td>'+r.ven+'</td><td>'+r.baj+'</td><td>'+r.ext+'</td><td style="font-weight:700">'+r.fin+'</td><td>'+fmt(r.pc)+'</td><td style="color:#1E3A8A;font-weight:600">'+r.ppp.toFixed(2)+' CUP</td><td>'+fmt(r.pv)+'</td><td style="color:#0F6E56;font-weight:700">'+fmt(r.gan)+'</td><td style="color:#A32D2D">'+fmt(r.perd)+'</td></tr>';
   }).join('');
   document.getElementById('ipv-tot-g').textContent=fmt(tg);
   document.getElementById('ipv-tot-p').textContent=fmt(tp);
 }
 
-function exportIPV(){
-  var emp=document.getElementById('ipv-tbl-label').textContent;
-  var fecha=document.getElementById('ipv-fecha-filtro').value||new Date().toLocaleDateString('es-ES');
-  var titulo='IPV — '+emp+' — '+fecha;
-  var tabla=document.getElementById('ipv-table').outerHTML;
-  var html='<html><head><meta charset="UTF-8"><title>'+titulo+'</title><style>body{font-family:Arial,sans-serif;padding:20px}h2{color:#1D9E75;margin-bottom:16px}table{border-collapse:collapse;width:100%}th{background:#1D9E75;color:#fff;padding:8px;text-align:left;font-size:12px}td{padding:8px;border-bottom:1px solid #eee;font-size:12px}.tfoot-row td{font-weight:700;background:#f5f5f0}</style></head><body><h2>'+titulo+'</h2>'+tabla+'</body></html>';
-  var win=window.open('','_blank');
-  win.document.write(html);
-  win.document.close();
-  win.print();
-}
-
+// FACTURAS
 function addFactura(){
-  var emp=gv('fe'),ti=gv('fti'),cli=gv('fc'),monto=gv('fm'),kon=gv('fk'),est=gv('fs');
-  if(!monto||!cli)return;
-  var row={fecha:new Date(),empresa:emp,tipo:ti,cliente:cli,monto:Number(monto),concepto:kon,estado:est};
-  facts.push(row);
-  document.getElementById('fc').value='';document.getElementById('fm').value='';document.getElementById('fk').value='';
-  appendToSheet('FACTURAS',[fdate(row.fecha),emp,ti,cli,kon,monto,est]);
+  var emp=gv('fe'),ti=gv('fti'),cli=gv('fc'),monto=Number(gv('fm'))||0,kon=gv('fk'),est=gv('fs');
+  var mon=gv('f-moneda');if(!monto||!cli)return;
+  var cup=toCUP(monto,mon);
+  facts.push({fecha:new Date(),emp,tipo:ti,cli,monto,mon,cup,kon,estado:est});
+  ['fc','fm','fk'].forEach(function(id){document.getElementById(id).value='';});
+  document.getElementById('f-equiv').textContent='0 CUP';
+  appendToSheet('FACTURAS',[fd(new Date()),emp,ti,cli,kon,monto,mon,Math.round(cup),est]);
   renderFact();renderRes();
 }
 
-function toggleEstado(idx){
-  facts[idx].estado=facts[idx].estado==='Pendiente'?'Pagada':'Pendiente';
-  renderFact();renderRes();
-}
+function toggleEstado(i){facts[i].estado=facts[i].estado==='Pendiente'?'Pagada':'Pendiente';renderFact();renderRes();}
 
 function renderFact(){
+  var datos=filtDate(facts,'fact-ff');
   var tb=document.getElementById('fact-tbody');
-  var fechaFiltro=document.getElementById('fact-fecha-filtro').value;
-  var datos=facts.slice();
-  if(fechaFiltro) datos=datos.filter(function(f){return fdate(f.fecha)===fdate(new Date(fechaFiltro+'T12:00:00'));});
-  if(!datos.length){tb.innerHTML='<tr><td colspan="7" class="empty"><i class="ti ti-inbox"></i>Sin facturas</td></tr>';return;}
+  if(!datos.length){tb.innerHTML='<tr><td colspan="9" class="empty"><i class="ti ti-inbox"></i>Sin facturas</td></tr>';return;}
   tb.innerHTML=datos.slice().reverse().map(function(f,i){
     var ri=facts.length-1-i;
-    return '<tr><td>'+fdate(f.fecha)+'</td><td style="color:'+(EMP_COLORS[f.empresa]||'#888')+';font-weight:600">'+f.empresa.split(' ')[0]+'</td><td>'+f.tipo+'</td><td>'+f.cliente+'</td><td>'+f.concepto+'</td><td style="font-weight:700">'+fmt(f.monto)+'</td><td><span class="badge '+(f.estado==='Pagada'?'bg':'ba')+'" style="cursor:pointer" onclick="toggleEstado('+ri+')">'+f.estado+'</span></td></tr>';
+    return '<tr><td>'+fd(f.fecha)+'</td><td style="color:'+(EMP_COLORS[f.emp]||'#888')+';font-weight:600">'+f.emp.split(' ')[0]+'</td><td>'+f.tipo+'</td><td>'+f.cli+'</td><td>'+f.kon+'</td><td><span class="moneda-badge">'+f.mon+'</span></td><td>'+f.monto+'</td><td style="font-weight:700">'+fmt(f.cup)+'</td><td><span class="badge '+(f.estado==='Pagada'?'bg':'ba')+'" style="cursor:pointer" onclick="toggleEstado('+ri+')">'+f.estado+'</span></td></tr>';
   }).join('');
 }
 
+// CUENTAS CONTABLES
+function addAsiento(){
+  var emp=gv('c-emp'),fecha=gv('c-fecha'),tipo=gv('c-tipo'),monto=Number(gv('c-monto'))||0,desc=gv('c-desc');
+  var cSel=document.getElementById('c-cuenta');
+  var cuentaTxt=cSel.options[cSel.selectedIndex].text;
+  if(!monto||!desc)return;
+  asientos.push({fecha:new Date(fecha+'T12:00:00'),emp,cuentaTxt,tipo,monto,desc});
+  document.getElementById('c-monto').value='';document.getElementById('c-desc').value='';
+  appendToSheet('CUENTAS',[fecha,emp,cuentaTxt,desc,tipo==='Debito'?monto:0,tipo==='Credito'?monto:0]);
+  renderCuentas();renderBalance();showStatus('Asiento registrado','ok');
+}
+
+function renderCuentas(){
+  var datos=filtDate(asientos,'c-ff');
+  var tb=document.getElementById('cuentas-tbody');
+  if(!datos.length){tb.innerHTML='<tr><td colspan="7" class="empty"><i class="ti ti-inbox"></i>Sin asientos</td></tr>';return;}
+  var saldo=0;
+  tb.innerHTML=datos.map(function(a){
+    if(a.tipo==='Debito')saldo+=a.monto;else saldo-=a.monto;
+    return '<tr><td>'+fd(a.fecha)+'</td><td style="color:'+(EMP_COLORS[a.emp]||'#888')+';font-weight:600">'+a.emp.split(' ')[0]+'</td><td style="font-size:11px">'+a.cuentaTxt+'</td><td>'+a.desc+'</td><td style="color:#0F6E56">'+(a.tipo==='Debito'?fmt(a.monto):'—')+'</td><td style="color:#A32D2D">'+(a.tipo==='Credito'?fmt(a.monto):'—')+'</td><td style="font-weight:700;color:'+(saldo>=0?'#0F6E56':'#A32D2D')+'">'+fmt(Math.abs(saldo))+'</td></tr>';
+  }).join('');
+}
+
+function renderBalance(){
+  var bal={};
+  asientos.forEach(function(a){
+    if(!bal[a.cuentaTxt])bal[a.cuentaTxt]={deb:0,cre:0};
+    if(a.tipo==='Debito')bal[a.cuentaTxt].deb+=a.monto;else bal[a.cuentaTxt].cre+=a.monto;
+  });
+  var keys=Object.keys(bal);
+  if(!keys.length){document.getElementById('balance-content').innerHTML='<div class="empty"><i class="ti ti-inbox"></i>Sin asientos registrados</div>';return;}
+  var html='<div class="tw"><table><thead><tr><th>Cuenta</th><th>Debito</th><th>Credito</th><th>Saldo</th></tr></thead><tbody>';
+  keys.forEach(function(k){var b=bal[k],s=b.deb-b.cre;html+='<tr><td style="font-size:11px">'+k+'</td><td style="color:#0F6E56">'+fmt(b.deb)+'</td><td style="color:#A32D2D">'+fmt(b.cre)+'</td><td style="font-weight:700;color:'+(s>=0?'#0F6E56':'#A32D2D')+'">'+fmt(Math.abs(s))+'</td></tr>';});
+  html+='</tbody></table></div>';
+  document.getElementById('balance-content').innerHTML=html;
+}
+
+// EXPORTAR
+function exportTable(tblId,titulo){
+  var tbl=document.getElementById(tblId).outerHTML;
+  var html='<html><head><meta charset="UTF-8"><title>'+titulo+'</title><style>body{font-family:Arial,sans-serif;padding:20px}h2{color:#1D9E75;margin-bottom:16px}table{border-collapse:collapse;width:100%}th{background:#1D9E75;color:#fff;padding:7px 8px;text-align:left;font-size:11px}td{padding:7px 8px;border-bottom:1px solid #eee;font-size:11px}.badge,.moneda-badge{padding:2px 5px;border-radius:8px;font-size:10px;border:1px solid #ddd;background:#f5f5f5}.tfoot-row td{font-weight:700;background:#f5f5f0}p{margin-top:16px;font-size:10px;color:#888}</style></head><body><h2>'+titulo+'</h2>'+tbl+'<p>Generado: '+new Date().toLocaleString('es-ES')+'</p></body></html>';
+  var w=window.open('','_blank');w.document.write(html);w.document.close();w.print();
+}
+
+// STATUS / JSONP / SYNC
 function showStatus(msg,type){
-  var bar=document.getElementById('status-bar');
-  bar.style.display='flex';bar.className='status-bar '+type;
+  var bar=document.getElementById('status-bar');bar.style.display='flex';bar.className='status-bar '+type;
   document.getElementById('status-msg').textContent=msg;
   if(type==='ok')setTimeout(function(){bar.style.display='none';},3000);
 }
 
-function jsonp(url, callback) {
-  var cbName = 'cb_' + Math.round(Math.random() * 1000000);
-  var script = document.createElement('script');
-  window[cbName] = function(data) {
-    delete window[cbName];
-    document.body.removeChild(script);
-    callback(data);
-  };
-  script.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + 'callback=' + cbName;
-  script.onerror = function() {
-    delete window[cbName];
-    document.body.removeChild(script);
-    callback({error: 'Error de conexion'});
-  };
-  document.body.appendChild(script);
+function jsonp(url,cb){
+  var n='cb_'+Math.round(Math.random()*1e6),s=document.createElement('script');
+  window[n]=function(d){delete window[n];document.body.removeChild(s);cb(d);};
+  s.src=url+(url.indexOf('?')>=0?'&':'?')+'callback='+n;
+  s.onerror=function(){delete window[n];document.body.removeChild(s);cb({error:'Error'});};
+  document.body.appendChild(s);
 }
 
-function appendToSheet(sheet, values) {
-  showStatus('Guardando en Google Sheets...', 'loading');
-  var encoded = encodeURIComponent(JSON.stringify({sheet: sheet, values: values}));
-  jsonp(SCRIPT_URL + '?action=append&data=' + encoded, function(data) {
-    if (data && data.success) {
-      showStatus('Guardado correctamente en Google Sheets', 'ok');
-    } else {
-      showStatus('Error al guardar', 'err');
-    }
+function appendToSheet(sheet,values){
+  showStatus('Guardando...','loading');
+  jsonp(SCRIPT_URL+'?action=append&data='+encodeURIComponent(JSON.stringify({sheet,values})),function(d){
+    if(d&&d.success)showStatus('Guardado en Google Sheets','ok');else showStatus('Error al guardar','err');
   });
 }
 
-function syncSheets() {
-  showStatus('Cargando datos...', 'loading');
-  jsonp(SCRIPT_URL + '?sheet=TRANSACCIONES', function(data) {
-    var rows = (data && data.values) || [];
-    trans = rows.slice(1).filter(function(r) { return r[1]; }).map(function(r) {
-      return {fecha: new Date(r[0]), empresa: r[1]||'', tipo: r[2]||'', categoria: r[3]||'', concepto: r[4]||'', monto: Number(r[5])||0};
+function syncSheets(){
+  showStatus('Cargando datos...','loading');
+  jsonp(SCRIPT_URL+'?sheet=TRANSACCIONES',function(d){
+    trans=(d&&d.values||[]).slice(1).filter(function(r){return r[1];}).map(function(r){
+      return{fecha:new Date(r[0]),emp:r[1]||'',tipo:r[2]||'',cat:r[3]||'',kon:r[4]||'',monto:Number(r[5])||0,mon:r[6]||'CUP',cup:Number(r[7])||0,met:r[8]||'efectivo',com:Number(r[9])||0};
     });
-    jsonp(SCRIPT_URL + '?sheet=FACTURAS', function(data2) {
-      var rows2 = (data2 && data2.values) || [];
-      facts = rows2.slice(1).filter(function(r) { return r[1]; }).map(function(r) {
-        return {fecha: new Date(r[0]), empresa: r[1]||'', tipo: r[2]||'', cliente: r[3]||'', concepto: r[4]||'', monto: Number(r[5])||0, estado: r[6]||'Pendiente'};
+    jsonp(SCRIPT_URL+'?sheet=FACTURAS',function(d2){
+      facts=(d2&&d2.values||[]).slice(1).filter(function(r){return r[1];}).map(function(r){
+        return{fecha:new Date(r[0]),emp:r[1]||'',tipo:r[2]||'',cli:r[3]||'',kon:r[4]||'',monto:Number(r[5])||0,mon:r[6]||'CUP',cup:Number(r[7])||0,estado:r[8]||'Pendiente'};
       });
-      jsonp(SCRIPT_URL + '?sheet=IPV', function(data3) {
-        var rows3 = (data3 && data3.values) || [];
-        ipvData = {};
-        rows3.slice(1).filter(function(r) { return r[1]; }).forEach(function(r) {
-          var emp = r[1];
-          if (!ipvData[emp]) ipvData[emp] = [];
-          ipvData[emp].push({
-            fecha: new Date(r[0]), producto: r[2]||'',
-            ini: Number(r[3])||0, ent: Number(r[4])||0, ven: Number(r[5])||0,
-            baj: Number(r[6])||0, ext: Number(r[7])||0, fin: Number(r[8])||0,
-            pc: Number(r[9])||0, pv: Number(r[10])||0,
-            ganancia: Number(r[11])||0, perdida: Number(r[12])||0
-          });
+      jsonp(SCRIPT_URL+'?sheet=IPV',function(d3){
+        ipvData={};
+        (d3&&d3.values||[]).slice(1).filter(function(r){return r[1];}).forEach(function(r){
+          var emp=r[1];if(!ipvData[emp])ipvData[emp]=[];
+          var ppp=Number(r[10])||Number(r[9])||0,fin=Number(r[8])||0;
+          ipvData[emp].push({fecha:new Date(r[0]),prod:r[2]||'',ini:Number(r[3])||0,ent:Number(r[4])||0,ven:Number(r[5])||0,baj:Number(r[6])||0,ext:Number(r[7])||0,fin,pc:Number(r[9])||0,ppp,pv:Number(r[11])||0,gan:Number(r[12])||0,perd:Number(r[13])||0});
+          pppStore[emp+'::'+r[2]]={ppp,cant:fin};
         });
-        showStatus('Datos sincronizados correctamente', 'ok');
-        renderRes(); renderTrans(); renderFact(); renderIPV();
+        localStorage.setItem('mipymes_ppp',JSON.stringify(pppStore));
+        showStatus('Datos sincronizados correctamente','ok');
+        renderRes();renderTrans();renderFact();renderIPV();
       });
     });
   });
 }
 
-loadEmpresas();
-renderRes();
+init();
 </script>
 </body>
 </html>
