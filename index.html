@@ -106,6 +106,8 @@ tr:hover td{background:#fafaf8}
   <button class="nb on" onclick="showSec('resumen',this)"><i class="ti ti-chart-bar"></i> Resumen</button>
   <button class="nb" onclick="showSec('trans',this)"><i class="ti ti-arrows-exchange"></i> Transacciones</button>
   <button class="nb" onclick="showSec('ipv',this)"><i class="ti ti-package"></i> IPV</button>
+  <button class="nb" onclick="showSec('inventario',this)"><i class="ti ti-stack"></i> Inventario</button>
+  <button class="nb" onclick="showSec('historial',this)"><i class="ti ti-history"></i> Historial</button>
   <button class="nb" onclick="showSec('facturas',this)"><i class="ti ti-file-invoice"></i> Facturas</button>
   <button class="nb" onclick="showSec('cuentas',this)"><i class="ti ti-book"></i> Cuentas</button>
   <button class="nb" onclick="showSec('monedas',this)"><i class="ti ti-currency-dollar"></i> Monedas</button>
@@ -209,6 +211,51 @@ tr:hover td{background:#fafaf8}
       <thead><tr><th>Fecha</th><th>Producto</th><th>Ini</th><th>Ent</th><th>Ventas</th><th>Bajas</th><th>Extr</th><th>Final</th><th>P.Costo</th><th>PPP</th><th>P.Venta</th><th>Ganancia</th><th>Perdida</th></tr></thead>
       <tbody id="ipv-tbody"></tbody>
       <tfoot><tr class="tfoot-row"><td colspan="11" style="padding:8px 10px">Totales</td><td style="padding:8px 10px;color:#0F6E56" id="ipv-tot-g">0 CUP</td><td style="padding:8px 10px;color:#A32D2D" id="ipv-tot-p">0 CUP</td></tr></tfoot>
+    </table></div>
+  </div>
+</div>
+
+<!-- INVENTARIO PERMANENTE -->
+<div class="sec" id="sec-inventario">
+  <div class="emp-tabs" id="inv-emp-tabs"></div>
+  <div class="card">
+    <div class="ct">
+      <span>Stock actual — <span id="inv-emp-lbl" style="font-weight:400;color:#aaa;text-transform:none">—</span></span>
+      <button class="btn-s" style="font-size:12px;padding:5px 10px" onclick="exportTable('inv-tbl','Inventario '+invEmp)"><i class="ti ti-printer"></i> Exportar</button>
+    </div>
+    <div class="tw"><table id="inv-tbl">
+      <thead><tr><th>Producto</th><th>Stock actual</th><th>PPP (CUP)</th><th>Valor en costo</th><th>Último movimiento</th></tr></thead>
+      <tbody id="inv-tbody"></tbody>
+    </table></div>
+  </div>
+</div>
+
+<!-- HISTORIAL -->
+<div class="sec" id="sec-historial">
+  <div class="card">
+    <div class="ct">Buscar en el historial</div>
+    <div class="fg">
+      <div class="fl"><label>Empresa</label><select id="h-emp"><option value="">Todas</option></select></div>
+      <div class="fl"><label>Tipo de registro</label><select id="h-tipo">
+        <option value="">Todos</option>
+        <option value="trans">Transacciones</option>
+        <option value="ipv">IPV / Inventario</option>
+        <option value="fact">Facturas</option>
+        <option value="cuenta">Asientos contables</option>
+      </select></div>
+      <div class="fl"><label>Fecha desde</label><input type="date" id="h-desde"></div>
+      <div class="fl"><label>Fecha hasta</label><input type="date" id="h-hasta"></div>
+    </div>
+    <div class="fbtn"><button class="btn-p" onclick="buscarHistorial()"><i class="ti ti-search"></i> Buscar</button></div>
+  </div>
+  <div class="card">
+    <div class="ct">
+      <span>Resultados <span id="h-count" style="font-weight:400;color:#aaa;text-transform:none"></span></span>
+      <button class="btn-s" style="font-size:12px;padding:5px 10px" onclick="exportTable('h-tbl','Historial')"><i class="ti ti-printer"></i> Exportar</button>
+    </div>
+    <div class="tw"><table id="h-tbl">
+      <thead><tr><th>Fecha</th><th>Empresa</th><th>Tipo</th><th>Detalle</th><th>Monto/Cant.</th><th>CUP</th></tr></thead>
+      <tbody id="h-tbody"></tbody>
     </table></div>
   </div>
 </div>
@@ -438,7 +485,7 @@ function loadEmpresas(){
   saveEmp();
   empresas.forEach(function(e,i){EMP_COLORS[e.nom]=COLORS[i%COLORS.length];});
   if(empresas.length&&!ipvEmp)ipvEmp=empresas[0].nom;
-  renderEmpTabs();renderEmpLista();renderEmpSels();
+  renderEmpTabs();renderEmpLista();renderEmpSels();renderInvTabs();renderHistEmpSel();
   document.getElementById('logo-sub').textContent=empresas.length+' empresa'+(empresas.length!==1?'s':'')+' registradas';
 }
 function saveEmp(){localStorage.setItem('mipymes_empresas',JSON.stringify(empresas));}
@@ -484,7 +531,7 @@ function showSec(id,btn){
   document.getElementById('sec-'+id).classList.add('on');
   document.querySelectorAll('.nb').forEach(function(b){b.classList.remove('on');});
   btn.classList.add('on');
-  var map={resumen:renderRes,trans:renderTrans,ipv:renderIPV,facturas:renderFact,cuentas:function(){renderCuentas();renderBalance();},monedas:renderTasas,empresas:renderEmpLista};
+  var map={resumen:renderRes,trans:renderTrans,ipv:renderIPV,inventario:renderInventario,historial:function(){renderHistEmpSel();},facturas:renderFact,cuentas:function(){renderCuentas();renderBalance();},monedas:renderTasas,empresas:renderEmpLista};
   if(map[id])map[id]();
 }
 function setEmp(btn,emp){document.querySelectorAll('#res-emp-tabs .et').forEach(function(b){b.classList.remove('on');});btn.classList.add('on');empActual=emp;renderRes();}
@@ -587,7 +634,19 @@ function setModoIPV(modo){
 function buscarPPP(){
   var prod=document.getElementById('ip').value.trim(),key=ipvEmp+'::'+prod;
   var info=document.getElementById('ppp-info');
-  if(pppStore[key]){
+  // Check stock first
+  var stockEmp=stockData[ipvEmp]||{};
+  if(stockEmp[prod]){
+    var s=stockEmp[prod];
+    // Auto-fill existencia inicial from stock
+    if(!document.getElementById('ii').value){
+      document.getElementById('ii').value=Math.round(s.cant);
+    }
+    info.style.display='flex';
+    document.getElementById('ppp-msg').textContent='Stock actual: '+Math.round(s.cant)+' unid. | PPP: '+s.ppp.toFixed(2)+' CUP — Existencia inicial cargada automaticamente';
+    document.getElementById('ipc').value=s.ppp.toFixed(2);
+    calcIPV();
+  } else if(pppStore[key]){
     info.style.display='flex';
     document.getElementById('ppp-msg').textContent='PPP anterior: '+pppStore[key].ppp.toFixed(2)+' CUP (stock: '+pppStore[key].cant+' unid.)';
     document.getElementById('ipc').value=pppStore[key].ppp.toFixed(2);
@@ -632,6 +691,7 @@ function addIPV(){
   var ppp=(cA>0||ent>0)?(cA*pppA+ent*pc)/(cA+ent):pc;
   var gan=ven*(pv-ppp),perd=(baj+ext)*ppp;
   pppStore[key]={ppp,cant:fin};localStorage.setItem('mipymes_ppp',JSON.stringify(pppStore));
+  updateStock(ipvEmp,prod,fin,ppp);
   if(!ipvData[ipvEmp])ipvData[ipvEmp]=[];
   ipvData[ipvEmp].push({fecha:new Date(),prod,ini,ent,ven,baj,ext,fin,pc,ppp,pv,gan,perd});
   ['ip','ii','ien','iv','if2','ib','ix','ipc','ipv2'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
@@ -720,7 +780,126 @@ function exportTable(tblId,titulo){
   var w=window.open('','_blank');w.document.write(html);w.document.close();w.print();
 }
 
-// STATUS / JSONP / SYNC
+// INVENTARIO PERMANENTE
+var invEmp='';
+var stockData={}; // {emp: {producto: {cant, ppp, fecha}}}
+
+function loadStock(){
+  var s=localStorage.getItem('mipymes_stock');
+  if(s)try{stockData=JSON.parse(s);}catch(e){}
+}
+
+function saveStock(){localStorage.setItem('mipymes_stock',JSON.stringify(stockData));}
+
+function updateStock(emp,prod,fin,ppp){
+  if(!stockData[emp])stockData[emp]={};
+  stockData[emp][prod]={cant:fin,ppp:ppp,fecha:new Date().toISOString()};
+  saveStock();
+}
+
+function setInvEmp(btn,emp){
+  document.querySelectorAll('#inv-emp-tabs .et').forEach(function(b){b.classList.remove('on');});
+  btn.classList.add('on');invEmp=emp;
+  document.getElementById('inv-emp-lbl').textContent=emp;
+  renderInventario();
+}
+
+function renderInventario(){
+  var tb=document.getElementById('inv-tbody');
+  var stock=stockData[invEmp]||{};
+  var prods=Object.keys(stock);
+  if(!prods.length){tb.innerHTML='<tr><td colspan="5" class="empty"><i class="ti ti-inbox"></i>Sin productos registrados aun</td></tr>';return;}
+  tb.innerHTML=prods.map(function(p){
+    var s=stock[p];
+    var valorCosto=s.cant*(s.ppp||0);
+    var fecha=s.fecha?new Date(s.fecha).toLocaleDateString('es-ES',{day:'2-digit',month:'2-digit',year:'2-digit'}):'—';
+    return '<tr><td style="font-weight:600">'+p+'</td><td style="font-weight:700;color:'+(s.cant>0?'#0F6E56':'#A32D2D')+'">'+Math.round(s.cant)+' unid.</td><td style="color:#1E3A8A">'+(s.ppp?s.ppp.toFixed(2)+' CUP':'—')+'</td><td>'+fmt(valorCosto)+'</td><td style="color:#888;font-size:11px">'+fecha+'</td></tr>';
+  }).join('');
+}
+
+function renderInvTabs(){
+  var tab=document.getElementById('inv-emp-tabs');
+  if(!tab)return;
+  tab.innerHTML='';
+  empresas.forEach(function(e,i){
+    tab.innerHTML+='<button class="'+(i===0?'et on':'et')+'" onclick="setInvEmp(this,\''+e.nom+'\')">'+e.nom.split(' ')[0]+'</button>';
+  });
+  if(empresas.length){invEmp=empresas[0].nom;document.getElementById('inv-emp-lbl').textContent=invEmp;}
+}
+
+// HISTORIAL
+function renderHistEmpSel(){
+  var sel=document.getElementById('h-emp');
+  if(!sel)return;
+  sel.innerHTML='<option value="">Todas</option>';
+  empresas.forEach(function(e){sel.innerHTML+='<option value="'+e.nom+'">'+e.nom+'</option>';});
+}
+
+function buscarHistorial(){
+  var empF=document.getElementById('h-emp').value;
+  var tipoF=document.getElementById('h-tipo').value;
+  var desde=document.getElementById('h-desde').value;
+  var hasta=document.getElementById('h-hasta').value;
+  var resultados=[];
+
+  function inRango(fecha){
+    var d=new Date(fecha);
+    if(desde&&d<new Date(desde+'T00:00:00'))return false;
+    if(hasta&&d>new Date(hasta+'T23:59:59'))return false;
+    return true;
+  }
+
+  // Transacciones
+  if(!tipoF||tipoF==='trans'){
+    trans.forEach(function(t){
+      if(empF&&t.emp!==empF)return;
+      if(!inRango(t.fecha))return;
+      resultados.push({fecha:t.fecha,emp:t.emp,tipo:'Transaccion',detalle:t.tipo+' — '+t.cat+' — '+t.kon+' ('+t.met+')',monto:t.monto+' '+t.mon,cup:t.cup});
+    });
+  }
+
+  // IPV
+  if(!tipoF||tipoF==='ipv'){
+    Object.keys(ipvData).forEach(function(emp){
+      if(empF&&emp!==empF)return;
+      (ipvData[emp]||[]).forEach(function(r){
+        if(!inRango(r.fecha))return;
+        resultados.push({fecha:r.fecha,emp:emp,tipo:'IPV',detalle:r.prod+' — Ven:'+r.ven+' Fin:'+r.fin+' PPP:'+r.ppp.toFixed(2),monto:r.ven+' unid.',cup:r.gan});
+      });
+    });
+  }
+
+  // Facturas
+  if(!tipoF||tipoF==='fact'){
+    facts.forEach(function(f){
+      if(empF&&f.emp!==empF)return;
+      if(!inRango(f.fecha))return;
+      resultados.push({fecha:f.fecha,emp:f.emp,tipo:'Factura '+f.tipo,detalle:f.cli+' — '+f.kon+' ('+f.estado+')',monto:f.monto+' '+f.mon,cup:f.cup});
+    });
+  }
+
+  // Asientos
+  if(!tipoF||tipoF==='cuenta'){
+    asientos.forEach(function(a){
+      if(empF&&a.emp!==empF)return;
+      if(!inRango(a.fecha))return;
+      resultados.push({fecha:a.fecha,emp:a.emp,tipo:'Asiento',detalle:a.cuentaTxt+' — '+a.desc+' ('+a.tipo+')',monto:a.tipo==='Debito'?'+'+a.monto:'-'+a.monto+' CUP',cup:a.tipo==='Debito'?a.monto:-a.monto});
+    });
+  }
+
+  // Ordenar por fecha descendente
+  resultados.sort(function(a,b){return new Date(b.fecha)-new Date(a.fecha);});
+
+  var tb=document.getElementById('h-tbody');
+  document.getElementById('h-count').textContent='('+resultados.length+' registros)';
+  if(!resultados.length){tb.innerHTML='<tr><td colspan="6" class="empty"><i class="ti ti-inbox"></i>Sin resultados para los filtros seleccionados</td></tr>';return;}
+  tb.innerHTML=resultados.map(function(r){
+    var tipoBadge=r.tipo==='Transaccion'?'bg':r.tipo.indexOf('Factura')>=0?'ba':r.tipo==='IPV'?'bp':'br';
+    return '<tr><td>'+fd(r.fecha)+'</td><td style="color:'+(EMP_COLORS[r.emp]||'#888')+';font-weight:600">'+r.emp.split(' ')[0]+'</td><td><span class="badge '+tipoBadge+'">'+r.tipo+'</span></td><td style="font-size:11px">'+r.detalle+'</td><td>'+r.monto+'</td><td style="font-weight:700;color:'+(r.cup>=0?'#0F6E56':'#A32D2D')+'">'+fmt(Math.abs(r.cup))+'</td></tr>';
+  }).join('');
+}
+
+// INIT STOCK
 function showStatus(msg,type){
   var bar=document.getElementById('status-bar');bar.style.display='flex';bar.className='status-bar '+type;
   document.getElementById('status-msg').textContent=msg;
@@ -759,16 +938,19 @@ function syncSheets(){
           var ppp=Number(r[10])||Number(r[9])||0,fin=Number(r[8])||0;
           ipvData[emp].push({fecha:new Date(r[0]),prod:r[2]||'',ini:Number(r[3])||0,ent:Number(r[4])||0,ven:Number(r[5])||0,baj:Number(r[6])||0,ext:Number(r[7])||0,fin,pc:Number(r[9])||0,ppp,pv:Number(r[11])||0,gan:Number(r[12])||0,perd:Number(r[13])||0});
           pppStore[emp+'::'+r[2]]={ppp,cant:fin};
+          updateStock(emp,r[2]||'',fin,ppp);
         });
         localStorage.setItem('mipymes_ppp',JSON.stringify(pppStore));
         showStatus('Datos sincronizados correctamente','ok');
         renderRes();renderTrans();renderFact();renderIPV();
+        if(invEmp)renderInventario();
       });
     });
   });
 }
 
 init();
+loadStock();
 </script>
 </body>
 </html>
