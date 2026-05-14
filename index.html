@@ -166,12 +166,20 @@ tr:hover td{background:#fafaf8}
 <div class="sec" id="sec-ipv">
   <div class="emp-tabs" id="ipv-emp-tabs"></div>
   <div class="card">
-    <div class="ct">Registrar producto — <span id="ipv-emp-lbl" style="font-weight:400;color:#aaa;text-transform:none">—</span></div>
+    <div class="ct">
+      <span>Registrar producto — <span id="ipv-emp-lbl" style="font-weight:400;color:#aaa;text-transform:none">—</span></span>
+      <div style="display:flex;gap:4px;background:#f5f5f0;border-radius:8px;padding:3px">
+        <button id="modo-ventas" onclick="setModoIPV('ventas')" style="font-size:11px;padding:4px 10px;border:none;border-radius:6px;cursor:pointer;background:#1D9E75;color:#fff;font-weight:600">Por ventas</button>
+        <button id="modo-conteo" onclick="setModoIPV('conteo')" style="font-size:11px;padding:4px 10px;border:none;border-radius:6px;cursor:pointer;background:none;color:#888;font-weight:500">Por conteo final</button>
+      </div>
+    </div>
+    <div id="ipv-modo-info" class="info-box" style="display:none"><i class="ti ti-info-circle"></i><span id="ipv-modo-msg"></span></div>
     <div class="fg">
       <div class="fl full"><label>Producto</label><input type="text" id="ip" placeholder="Nombre del producto" oninput="buscarPPP()"></div>
       <div class="fl"><label>Existencia inicial</label><input type="number" id="ii" placeholder="0" oninput="calcIPV()"></div>
       <div class="fl"><label>Entradas</label><input type="number" id="ien" placeholder="0" oninput="calcIPV()"></div>
-      <div class="fl"><label>Ventas</label><input type="number" id="iv" placeholder="0" oninput="calcIPV()"></div>
+      <div class="fl" id="campo-ventas"><label>Ventas</label><input type="number" id="iv" placeholder="0" oninput="calcIPV()"></div>
+      <div class="fl" id="campo-final" style="display:none"><label>Existencia final (conteo)</label><input type="number" id="if2" placeholder="0" oninput="calcIPV()"></div>
       <div class="fl"><label>Bajas</label><input type="number" id="ib" placeholder="0" oninput="calcIPV()"></div>
       <div class="fl"><label>Extracciones</label><input type="number" id="ix" placeholder="0" oninput="calcIPV()"></div>
       <div class="fl"><label>Precio costo (CUP)</label><input type="number" id="ipc" placeholder="0" oninput="calcIPV()"></div>
@@ -180,6 +188,7 @@ tr:hover td{background:#fafaf8}
     <div id="ppp-info" style="display:none" class="info-box"><i class="ti ti-info-circle"></i><span id="ppp-msg"></span></div>
     <div class="calc-box">
       <div><div class="cl">Existencia final</div><div class="cv" id="c-fin">0</div></div>
+      <div id="calc-ventas-box" style="display:none"><div class="cl">Ventas calculadas</div><div class="cv g" id="c-ventas-calc">0 unid.</div></div>
       <div><div class="cl">Precio prom. pond. (PPP)</div><div class="cv b" id="c-ppp">0 CUP</div></div>
       <div><div class="cl">Ganancia bruta</div><div class="cv g" id="c-gan">0 CUP</div></div>
       <div><div class="cl">Valor en costo</div><div class="cv" id="c-vcosto">0 CUP</div></div>
@@ -549,6 +558,31 @@ function renderTrans(){
   }).join('');
 }
 
+// IPV MODO
+var ipvModo='ventas';
+function setModoIPV(modo){
+  ipvModo=modo;
+  var btnV=document.getElementById('modo-ventas'),btnC=document.getElementById('modo-conteo');
+  var campoV=document.getElementById('campo-ventas'),campoF=document.getElementById('campo-final');
+  var info=document.getElementById('ipv-modo-info'),msg=document.getElementById('ipv-modo-msg');
+  var calcV=document.getElementById('calc-ventas-box');
+  if(modo==='ventas'){
+    btnV.style.background='#1D9E75';btnV.style.color='#fff';
+    btnC.style.background='none';btnC.style.color='#888';
+    campoV.style.display='flex';campoF.style.display='none';
+    calcV.style.display='none';
+    info.style.display='none';
+  } else {
+    btnC.style.background='#1D9E75';btnC.style.color='#fff';
+    btnV.style.background='none';btnV.style.color='#888';
+    campoV.style.display='none';campoF.style.display='flex';
+    calcV.style.display='block';
+    info.style.display='flex';
+    msg.textContent='Modo conteo final: pon cuantas unidades quedan al cierre y las ventas se calculan solas.';
+  }
+  calcIPV();
+}
+
 // IPV + PPP
 function buscarPPP(){
   var prod=document.getElementById('ip').value.trim(),key=ipvEmp+'::'+prod;
@@ -562,8 +596,17 @@ function buscarPPP(){
 }
 
 function calcIPV(){
-  var ini=Number(gv('ii'))||0,ent=Number(gv('ien'))||0,ven=Number(gv('iv'))||0,baj=Number(gv('ib'))||0,ext=Number(gv('ix'))||0,pc=Number(gv('ipc'))||0,pv=Number(gv('ipv2'))||0;
-  var fin=ini+ent-ven-baj-ext;
+  var ini=Number(gv('ii'))||0,ent=Number(gv('ien'))||0,baj=Number(gv('ib'))||0,ext=Number(gv('ix'))||0,pc=Number(gv('ipc'))||0,pv=Number(gv('ipv2'))||0;
+  var ven,fin;
+  if(ipvModo==='ventas'){
+    ven=Number(gv('iv'))||0;
+    fin=ini+ent-ven-baj-ext;
+  } else {
+    fin=Number(gv('if2'))||0;
+    ven=ini+ent-fin-baj-ext;
+    if(ven<0)ven=0;
+    document.getElementById('c-ventas-calc').textContent=Math.round(ven)+' unid.';
+  }
   var prod=document.getElementById('ip').value.trim(),key=ipvEmp+'::'+prod;
   var pppA=pppStore[key]?pppStore[key].ppp:pc,cA=pppStore[key]?pppStore[key].cant:ini;
   var ppp=(cA>0||ent>0)?(cA*pppA+ent*pc)/(cA+ent):pc;
@@ -577,8 +620,13 @@ function calcIPV(){
 
 function addIPV(){
   var prod=gv('ip');if(!prod)return;
-  var ini=Number(gv('ii'))||0,ent=Number(gv('ien'))||0,ven=Number(gv('iv'))||0,baj=Number(gv('ib'))||0,ext=Number(gv('ix'))||0,pc=Number(gv('ipc'))||0,pv=Number(gv('ipv2'))||0;
-  var fin=ini+ent-ven-baj-ext;
+  var ini=Number(gv('ii'))||0,ent=Number(gv('ien'))||0,baj=Number(gv('ib'))||0,ext=Number(gv('ix'))||0,pc=Number(gv('ipc'))||0,pv=Number(gv('ipv2'))||0;
+  var ven,fin;
+  if(ipvModo==='ventas'){
+    ven=Number(gv('iv'))||0;fin=ini+ent-ven-baj-ext;
+  } else {
+    fin=Number(gv('if2'))||0;ven=ini+ent-fin-baj-ext;if(ven<0)ven=0;
+  }
   var key=ipvEmp+'::'+prod;
   var pppA=pppStore[key]?pppStore[key].ppp:pc,cA=pppStore[key]?pppStore[key].cant:ini;
   var ppp=(cA>0||ent>0)?(cA*pppA+ent*pc)/(cA+ent):pc;
@@ -586,7 +634,7 @@ function addIPV(){
   pppStore[key]={ppp,cant:fin};localStorage.setItem('mipymes_ppp',JSON.stringify(pppStore));
   if(!ipvData[ipvEmp])ipvData[ipvEmp]=[];
   ipvData[ipvEmp].push({fecha:new Date(),prod,ini,ent,ven,baj,ext,fin,pc,ppp,pv,gan,perd});
-  ['ip','ii','ien','iv','ib','ix','ipc','ipv2'].forEach(function(id){document.getElementById(id).value='';});
+  ['ip','ii','ien','iv','if2','ib','ix','ipc','ipv2'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
   document.getElementById('ppp-info').style.display='none';calcIPV();
   appendToSheet('IPV',[fd(new Date()),ipvEmp,prod,ini,ent,ven,baj,ext,fin,pc,ppp.toFixed(2),pv,Math.round(gan),Math.round(perd)]);
   renderIPV();renderRes();
