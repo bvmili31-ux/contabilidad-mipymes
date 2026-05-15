@@ -99,6 +99,7 @@ tr:hover td{background:#fafaf8}
   <div class="topbar-right">
     <div class="date-badge" id="fecha-hoy"></div>
     <button class="sync-btn" onclick="syncSheets()"><i class="ti ti-refresh"></i> Sincronizar</button>
+    <span id="pending-badge" style="display:none;background:#E67E22;color:#fff;font-size:11px;font-weight:600;padding:4px 8px;border-radius:8px"></span>
   </div>
 </div>
 
@@ -900,10 +901,70 @@ function buscarHistorial(){
 }
 
 // INIT STOCK
+
+// OFFLINE QUEUE
+var offlineQueue=[];
+var isOnline=navigator.onLine;
+
+function loadQueue(){
+  var q=localStorage.getItem('mipymes_queue');
+  if(q)try{offlineQueue=JSON.parse(q);}catch(e){}
+}
+
+function saveQueue(){localStorage.setItem('mipymes_queue',JSON.stringify(offlineQueue));}
+
+function updateOnlineStatus(){
+  isOnline=navigator.onLine;
+  var bar=document.getElementById('status-bar');
+  if(!isOnline){
+    bar.style.display='flex';bar.className='status-bar err';
+    document.getElementById('status-msg').textContent='Sin conexion — los datos se guardan localmente y se enviaran cuando vuelva internet';
+  } else {
+    if(offlineQueue.length>0){
+      showStatus('Conexion restaurada — enviando '+offlineQueue.length+' registros pendientes...','loading');
+      flushQueue();
+    } else {
+      showStatus('Conexion restaurada','ok');
+    }
+  }
+}
+
+window.addEventListener('online',updateOnlineStatus);
+window.addEventListener('offline',updateOnlineStatus);
+
+function flushQueue(){
+  if(!offlineQueue.length||!isOnline)return;
+  var item=offlineQueue[0];
+  jsonp(SCRIPT_URL+'?action=append&data='+encodeURIComponent(JSON.stringify({sheet:item.sheet,values:item.values})),function(d){
+    if(d&&d.success){
+      offlineQueue.shift();
+      saveQueue();
+      if(offlineQueue.length>0){
+        flushQueue();
+      } else {
+        showStatus('Todos los registros pendientes enviados a Google Sheets','ok');
+      }
+    } else {
+      showStatus('Error al enviar registros pendientes — reintentando...','err');
+      setTimeout(flushQueue,5000);
+    }
+  });
+}
+
 function showStatus(msg,type){
   var bar=document.getElementById('status-bar');bar.style.display='flex';bar.className='status-bar '+type;
   document.getElementById('status-msg').textContent=msg;
   if(type==='ok')setTimeout(function(){bar.style.display='none';},3000);
+}
+
+function updatePendingBadge(){
+  var badge=document.getElementById('pending-badge');
+  if(!badge)return;
+  if(offlineQueue.length>0){
+    badge.style.display='inline';badge.textContent=offlineQueue.length+' pendientes';
+  } else {
+    badge.style.display='none';
+  }
 }
 
 function jsonp(url,cb){
@@ -915,9 +976,23 @@ function jsonp(url,cb){
 }
 
 function appendToSheet(sheet,values){
+  if(!isOnline){
+    offlineQueue.push({sheet,values});
+    saveQueue();
+    updatePendingBadge();
+    showStatus('Sin internet — guardado localmente ('+offlineQueue.length+' pendientes)','loading');
+    return;
+  }
   showStatus('Guardando...','loading');
   jsonp(SCRIPT_URL+'?action=append&data='+encodeURIComponent(JSON.stringify({sheet,values})),function(d){
-    if(d&&d.success)showStatus('Guardado en Google Sheets','ok');else showStatus('Error al guardar','err');
+    if(d&&d.success){
+      showStatus('Guardado en Google Sheets','ok');
+    } else {
+      offlineQueue.push({sheet,values});
+      saveQueue();
+      updatePendingBadge();
+      showStatus('Error — guardado localmente ('+offlineQueue.length+' pendientes)','loading');
+    }
   });
 }
 
@@ -951,6 +1026,9 @@ function syncSheets(){
 
 init();
 loadStock();
+loadQueue();
+updatePendingBadge();
+updateOnlineStatus();
 </script>
 </body>
 </html>
