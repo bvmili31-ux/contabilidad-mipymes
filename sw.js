@@ -1,4 +1,4 @@
-var CACHE_NAME = 'mipymes-v1';
+var CACHE_NAME = 'mipymes-v3';
 var ASSETS = [
   '/contabilidad-mipymes/',
   '/contabilidad-mipymes/index.html',
