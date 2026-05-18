@@ -97,7 +97,7 @@ tr:hover td{background:#fafaf8}
     <div class="date-badge" id="fecha-hoy"></div>
     <button class="sync-btn" onclick="syncSheets()"><i class="ti ti-refresh"></i> Sincronizar</button>
     <button class="install-btn" id="install-btn" onclick="instalarApp()"><i class="ti ti-download"></i> Instalar</button>
-    <span class="pending-badge" id="pending-badge"></span>
+    <span class="pending-badge" id="pending-badge" onclick="enviarPendientes()" style="cursor:pointer"></span>
   </div>
 </div>
 <div id="sbar-global" class="sbar" style="display:none;margin:8px 14px 0"><i class="ti ti-loader" id="sbar-icon"></i><span id="sbar-msg"></span></div>
@@ -399,10 +399,18 @@ function loadQ(){
   updBadge();
 }
 
+function enviarPendientes(){
+  online=navigator.onLine;
+  if(!online){showS('Sin internet — no se pueden enviar los pendientes ahora','err');return;}
+  if(!queue.length){showS('No hay registros pendientes','ok');return;}
+  showS('Enviando '+queue.length+' registros pendientes...','info');
+  flushQ();
+}
+
 function updBadge(){
   var b=document.getElementById('pending-badge');
   if(!b)return;
-  if(queue.length){b.style.display='inline';b.textContent=queue.length+' pendientes';}
+  if(queue.length){b.style.display='inline';b.textContent=queue.length+' pendientes — toca aqui para enviar';}
   else b.style.display='none';
 }
 
@@ -729,7 +737,13 @@ function loadData(){
 
 // ─── SYNC ───
 function syncSheets(){
+  online=navigator.onLine;
   if(!online){showS('Sin internet — no se puede sincronizar ahora','err');return;}
+  if(queue.length){showS('Enviando '+queue.length+' registros pendientes...','info');flushQ();setTimeout(function(){doSync();},2000);}
+  else doSync();
+}
+
+function doSync(){
   showS('Cargando datos desde Google Sheets...','info');
   jsonp(SURL+'?sheet=TRANSACCIONES',function(d){
     if(d&&d.values){
