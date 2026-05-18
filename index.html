@@ -4,6 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Contabilidad Mipymes</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1D9E75">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Mipymes">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -99,6 +104,7 @@ tr:hover td{background:#fafaf8}
   <div class="topbar-right">
     <div class="date-badge" id="fecha-hoy"></div>
     <button class="sync-btn" onclick="syncSheets()"><i class="ti ti-refresh"></i> Sincronizar</button>
+    <button id="install-btn" onclick="instalarApp()" style="display:none;font-size:12px;color:#fff;background:#1D9E75;border:none;border-radius:8px;padding:6px 12px;cursor:pointer;align-items:center;gap:5px;font-weight:500"><i class="ti ti-download"></i> Instalar app</button>
     <span id="pending-badge" style="display:none;background:#E67E22;color:#fff;font-size:11px;font-weight:600;padding:4px 8px;border-radius:8px"></span>
   </div>
 </div>
@@ -385,7 +391,104 @@ tr:hover td{background:#fafaf8}
 
 <script>
 var SCRIPT_URL='https://script.google.com/macros/s/AKfycbylvub1T5i_6WcH-dckEdPzi3ABCcGuvqD35oOxaPc3pIrrePN88a_T1gBtebgE2l0m/exec';
-var trans=[],ipvData={},facts=[],asientos=[],empresas=[],monedas={},pppStore={};
+
+// ─── INDEXEDDB — base de datos permanente en el dispositivo ───
+var DB_NAME='MipymesDB', DB_VERSION=1, db=null;
+
+function initDB(){
+  return new Promise(function(resolve,reject){
+    var req=indexedDB.open(DB_NAME,DB_VERSION);
+    req.onupgradeneeded=function(e){
+      var d=e.target.result;
+      if(!d.objectStoreNames.contains('transacciones'))d.createObjectStore('transacciones',{keyPath:'id',autoIncrement:true});
+      if(!d.objectStoreNames.contains('ipv'))d.createObjectStore('ipv',{keyPath:'id',autoIncrement:true});
+      if(!d.objectStoreNames.contains('facturas'))d.createObjectStore('facturas',{keyPath:'id',autoIncrement:true});
+      if(!d.objectStoreNames.contains('asientos'))d.createObjectStore('asientos',{keyPath:'id',autoIncrement:true});
+      if(!d.objectStoreNames.contains('queue'))d.createObjectStore('queue',{keyPath:'id',autoIncrement:true});
+      if(!d.objectStoreNames.contains('config'))d.createObjectStore('config',{keyPath:'key'});
+    };
+    req.onsuccess=function(e){db=e.target.result;resolve(db);};
+    req.onerror=function(){reject(req.error);};
+  });
+}
+
+function dbSave(store,data){
+  return new Promise(function(resolve,reject){
+    if(!db){resolve(null);return;}
+    var tx=db.transaction(store,'readwrite');
+    var req=tx.objectStore(store).add(data);
+    req.onsuccess=function(){resolve(req.result);};
+    req.onerror=function(){reject(req.error);};
+  });
+}
+
+function dbGetAll(store){
+  return new Promise(function(resolve){
+    if(!db){resolve([]);return;}
+    var tx=db.transaction(store,'readonly');
+    var req=tx.objectStore(store).getAll();
+    req.onsuccess=function(){resolve(req.result||[]);};
+    req.onerror=function(){resolve([]);};
+  });
+}
+
+function dbDelete(store,id){
+  return new Promise(function(resolve){
+    if(!db){resolve();return;}
+    var tx=db.transaction(store,'readwrite');
+    tx.objectStore(store).delete(id);
+    tx.oncomplete=resolve;
+  });
+}
+
+function dbSaveConfig(key,value){
+  if(!db)return;
+  var tx=db.transaction('config','readwrite');
+  tx.objectStore('config').put({key,value});
+}
+
+function dbGetConfig(key){
+  return new Promise(function(resolve){
+    if(!db){resolve(null);return;}
+    var tx=db.transaction('config','readonly');
+    var req=tx.objectStore('config').get(key);
+    req.onsuccess=function(){resolve(req.result?req.result.value:null);};
+    req.onerror=function(){resolve(null);};
+  });
+}
+
+// ─── SERVICE WORKER ───
+if('serviceWorker' in navigator){
+  window.addEventListener('load',function(){
+    navigator.serviceWorker.register('sw.js').then(function(reg){
+      console.log('SW registrado');
+      reg.addEventListener('updatefound',function(){
+        var newSW=reg.installing;
+        newSW.addEventListener('statechange',function(){
+          if(newSW.state==='installed'&&navigator.serviceWorker.controller){
+            showStatus('Nueva version disponible — recarga la pagina','loading');
+          }
+        });
+      });
+    }).catch(function(e){console.log('SW error:',e);});
+  });
+}
+
+// ─── INSTALAR COMO APP ───
+var deferredPrompt=null;
+window.addEventListener('beforeinstallprompt',function(e){
+  e.preventDefault();deferredPrompt=e;
+  var btn=document.getElementById('install-btn');
+  if(btn)btn.style.display='flex';
+});
+
+function instalarApp(){
+  if(!deferredPrompt)return;
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice.then(function(){deferredPrompt=null;
+    var btn=document.getElementById('install-btn');if(btn)btn.style.display='none';
+  });
+}
 var empActual='TODAS',perActual='hoy',ipvEmp='';
 var COLORS=['#1D9E75','#378ADD','#D85A30','#9B59B6','#E67E22','#E91E63','#16A085'];
 var EMP_COLORS={};
@@ -589,6 +692,7 @@ function addTrans(){
   var cup=toCUP(monto,mon),com=met!=='efectivo'?cup*pct/100:0;
   var row={fecha:new Date(),emp,tipo,cat,monto,mon,cup,met,com,kon};
   trans.push(row);
+  dbSave('transacciones',row);
   ['tc','tm','tk','t-pct'].forEach(function(id){document.getElementById(id).value='';});
   document.getElementById('t-equiv').textContent='0 CUP';document.getElementById('t-com-val').textContent='0 CUP';
   appendToSheet('TRANSACCIONES',[fd(row.fecha),emp,tipo,cat,kon,monto,mon,Math.round(cup),met,Math.round(com)]);
@@ -694,7 +798,9 @@ function addIPV(){
   pppStore[key]={ppp,cant:fin};localStorage.setItem('mipymes_ppp',JSON.stringify(pppStore));
   updateStock(ipvEmp,prod,fin,ppp);
   if(!ipvData[ipvEmp])ipvData[ipvEmp]=[];
-  ipvData[ipvEmp].push({fecha:new Date(),prod,ini,ent,ven,baj,ext,fin,pc,ppp,pv,gan,perd});
+  var ipvRow={fecha:new Date(),emp:ipvEmp,prod,ini,ent,ven,baj,ext,fin,pc,ppp,pv,gan,perd};
+  ipvData[ipvEmp].push(ipvRow);
+  dbSave('ipv',ipvRow);
   ['ip','ii','ien','iv','if2','ib','ix','ipc','ipv2'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
   document.getElementById('ppp-info').style.display='none';calcIPV();
   appendToSheet('IPV',[fd(new Date()),ipvEmp,prod,ini,ent,ven,baj,ext,fin,pc,ppp.toFixed(2),pv,Math.round(gan),Math.round(perd)]);
@@ -718,7 +824,9 @@ function addFactura(){
   var emp=gv('fe'),ti=gv('fti'),cli=gv('fc'),monto=Number(gv('fm'))||0,kon=gv('fk'),est=gv('fs');
   var mon=gv('f-moneda');if(!monto||!cli)return;
   var cup=toCUP(monto,mon);
-  facts.push({fecha:new Date(),emp,tipo:ti,cli,monto,mon,cup,kon,estado:est});
+  var fRow={fecha:new Date(),emp,tipo:ti,cli,monto,mon,cup,kon,estado:est};
+  facts.push(fRow);
+  dbSave('facturas',fRow);
   ['fc','fm','fk'].forEach(function(id){document.getElementById(id).value='';});
   document.getElementById('f-equiv').textContent='0 CUP';
   appendToSheet('FACTURAS',[fd(new Date()),emp,ti,cli,kon,monto,mon,Math.round(cup),est]);
@@ -743,7 +851,9 @@ function addAsiento(){
   var cSel=document.getElementById('c-cuenta');
   var cuentaTxt=cSel.options[cSel.selectedIndex].text;
   if(!monto||!desc)return;
-  asientos.push({fecha:new Date(fecha+'T12:00:00'),emp,cuentaTxt,tipo,monto,desc});
+  var aRow={fecha:new Date(fecha+'T12:00:00'),emp,cuentaTxt,tipo,monto,desc};
+  asientos.push(aRow);
+  dbSave('asientos',aRow);
   document.getElementById('c-monto').value='';document.getElementById('c-desc').value='';
   appendToSheet('CUENTAS',[fecha,emp,cuentaTxt,desc,tipo==='Debito'?monto:0,tipo==='Credito'?monto:0]);
   renderCuentas();renderBalance();showStatus('Asiento registrado','ok');
@@ -907,11 +1017,12 @@ var offlineQueue=[];
 var isOnline=navigator.onLine;
 
 function loadQueue(){
-  var q=localStorage.getItem('mipymes_queue');
-  if(q)try{offlineQueue=JSON.parse(q);}catch(e){}
+  dbGetAll('queue').then(function(items){
+    offlineQueue=items||[];
+    updatePendingBadge();
+    if(isOnline&&offlineQueue.length>0)flushQueue();
+  });
 }
-
-function saveQueue(){localStorage.setItem('mipymes_queue',JSON.stringify(offlineQueue));}
 
 function updateOnlineStatus(){
   isOnline=navigator.onLine;
@@ -937,13 +1048,16 @@ function flushQueue(){
   var item=offlineQueue[0];
   jsonp(SCRIPT_URL+'?action=append&data='+encodeURIComponent(JSON.stringify({sheet:item.sheet,values:item.values})),function(d){
     if(d&&d.success){
+      var id=item.id;
       offlineQueue.shift();
-      saveQueue();
-      if(offlineQueue.length>0){
-        flushQueue();
-      } else {
-        showStatus('Todos los registros pendientes enviados a Google Sheets','ok');
-      }
+      dbDelete('queue',id).then(function(){
+        updatePendingBadge();
+        if(offlineQueue.length>0){
+          flushQueue();
+        } else {
+          showStatus('Todos los registros pendientes enviados a Google Sheets','ok');
+        }
+      });
     } else {
       showStatus('Error al enviar registros pendientes — reintentando...','err');
       setTimeout(flushQueue,5000);
@@ -976,11 +1090,12 @@ function jsonp(url,cb){
 }
 
 function appendToSheet(sheet,values){
+  var qItem={sheet,values,ts:Date.now()};
   if(!isOnline){
-    offlineQueue.push({sheet,values});
-    saveQueue();
-    updatePendingBadge();
-    showStatus('Sin internet — guardado localmente ('+offlineQueue.length+' pendientes)','loading');
+    dbSave('queue',qItem).then(function(id){
+      qItem.id=id;offlineQueue.push(qItem);updatePendingBadge();
+      showStatus('Sin internet — guardado en el dispositivo ('+offlineQueue.length+' pendientes)','loading');
+    });
     return;
   }
   showStatus('Guardando...','loading');
@@ -988,10 +1103,10 @@ function appendToSheet(sheet,values){
     if(d&&d.success){
       showStatus('Guardado en Google Sheets','ok');
     } else {
-      offlineQueue.push({sheet,values});
-      saveQueue();
-      updatePendingBadge();
-      showStatus('Error — guardado localmente ('+offlineQueue.length+' pendientes)','loading');
+      dbSave('queue',qItem).then(function(id){
+        qItem.id=id;offlineQueue.push(qItem);updatePendingBadge();
+        showStatus('Error de red — guardado en el dispositivo ('+offlineQueue.length+' pendientes)','loading');
+      });
     }
   });
 }
@@ -1026,9 +1141,43 @@ function syncSheets(){
 
 init();
 loadStock();
-loadQueue();
-updatePendingBadge();
-updateOnlineStatus();
+// Iniciar IndexedDB y luego cargar cola y datos locales
+initDB().then(function(){
+  loadQueue();
+  updatePendingBadge();
+  updateOnlineStatus();
+  // Cargar datos locales de IndexedDB
+  return Promise.all([
+    dbGetAll('transacciones'),
+    dbGetAll('ipv'),
+    dbGetAll('facturas'),
+    dbGetAll('asientos')
+  ]);
+}).then(function(results){
+  var tLocal=results[0]||[];
+  var iPVLocal=results[1]||[];
+  var fLocal=results[2]||[];
+  var aLocal=results[3]||[];
+  // Mezclar datos locales con los que ya están en memoria
+  tLocal.forEach(function(r){
+    if(!trans.find(function(t){return t.id===r.id;}))trans.push(r);
+  });
+  iPVLocal.forEach(function(r){
+    var emp=r.emp||r.empresa||'';
+    if(!ipvData[emp])ipvData[emp]=[];
+    if(!ipvData[emp].find(function(t){return t.id===r.id;}))ipvData[emp].push(r);
+  });
+  fLocal.forEach(function(r){
+    if(!facts.find(function(t){return t.id===r.id;}))facts.push(r);
+  });
+  aLocal.forEach(function(r){
+    if(!asientos.find(function(t){return t.id===r.id;}))asientos.push(r);
+  });
+  renderRes();renderTrans();renderFact();
+}).catch(function(e){
+  console.log('IndexedDB no disponible, usando localStorage',e);
+  loadQueue();updatePendingBadge();updateOnlineStatus();
+});
 </script>
 </body>
 </html>
