@@ -1,0 +1,25 @@
+{
+  "name": "Contabilidad Mipymes",
+  "short_name": "Mipymes",
+  "description": "Sistema de contabilidad para mipymes cubanas",
+  "start_url": "/contabilidad-mipymes/",
+  "scope": "/contabilidad-mipymes/",
+  "display": "standalone",
+  "background_color": "#f5f5f0",
+  "theme_color": "#1D9E75",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
