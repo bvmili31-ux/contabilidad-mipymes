@@ -293,29 +293,54 @@ tr:hover td{background:#252525}
 <!-- FACTURAS -->
 <div class="sec" id="sec-facturas">
   <div class="card">
-    <div class="ct">Nueva factura</div>
+    <div class="ct">
+      <span>Nueva factura</span>
+      <div style="display:flex;gap:3px;background:#222;border-radius:7px;padding:2px">
+        <button id="f-tipo-btn-e" onclick="setTipoFact('Emitida')" style="font-size:11px;padding:3px 10px;border:none;border-radius:5px;cursor:pointer;background:var(--gold);color:var(--dark);font-weight:700">Emitida (Venta)</button>
+        <button id="f-tipo-btn-r" onclick="setTipoFact('Recibida')" style="font-size:11px;padding:3px 10px;border:none;border-radius:5px;cursor:pointer;background:none;color:var(--text2)">Recibida (Compra)</button>
+      </div>
+    </div>
+    <div class="info-box" id="f-tipo-info"><i class="ti ti-info-circle"></i><span id="f-tipo-msg">Factura emitida: registra una venta. Reduce el stock y genera ingreso.</span></div>
     <div class="fg">
       <div class="fl"><label>Empresa</label><select id="fe"></select></div>
-      <div class="fl"><label>Tipo</label><select id="fti"><option>Emitida</option><option>Recibida</option></select></div>
-      <div class="fl"><label>Proveedor/Cliente</label><input type="text" id="fc" placeholder="Nombre"></div>
-      <div class="fl"><label>Moneda</label><select id="f-mon" onchange="updEquiv('f-mon','fm','f-eq')"></select></div>
-      <div class="fl"><label id="f-mlbl">Monto</label><input type="number" id="fm" placeholder="0" oninput="updEquiv('f-mon','fm','f-eq')"></div>
-      <div class="fl"><label>Equiv. CUP</label><div class="equiv-box" id="f-eq">0 CUP</div></div>
-      <div class="fl full"><label>Concepto</label><input type="text" id="fk" placeholder="Descripcion"></div>
-      <div class="fl full"><label>Notas (opcional)</label><input type="text" id="f-notas" placeholder="Referencia, numero de factura, observacion..."></div>
+      <div class="fl"><label>Cliente / Proveedor</label><input type="text" id="fc" placeholder="Nombre"></div>
+      <div class="fl"><label>Moneda</label><select id="f-mon"></select></div>
+      <div class="fl"><label>Notas (opcional)</label><input type="text" id="f-notas" placeholder="Numero de factura, referencia..."></div>
       <div class="fl"><label>Estado</label><select id="fs"><option>Pendiente</option><option>Pagada</option></select></div>
     </div>
-    <div class="fbtn"><button class="btn-p" onclick="addFact()"><i class="ti ti-check"></i> Guardar</button></div>
+
+    <!-- PRODUCTOS DE LA FACTURA -->
+    <div style="margin-top:12px">
+      <div class="ct" style="margin-bottom:8px">Productos de la factura</div>
+      <div class="fg" id="f-prod-form">
+        <div class="fl full"><label>Producto</label><input type="text" id="fp-nom" placeholder="Nombre del producto" oninput="cargarDatosProd()"></div>
+        <div class="fl"><label>Cantidad</label><input type="number" id="fp-cant" placeholder="0" oninput="calcLineaFact()"></div>
+        <div class="fl"><label id="fp-precio-lbl">Precio unitario (CUP)</label><input type="number" id="fp-precio" placeholder="0" oninput="calcLineaFact()"></div>
+        <div class="fl"><label>Subtotal</label><div class="equiv-box" id="fp-sub">0 CUP</div></div>
+        <div class="fl" id="fp-stock-box" style="display:none"><label>Stock actual</label><div class="equiv-box" id="fp-stock">—</div></div>
+        <div class="fl" id="fp-ppp-box" style="display:none"><label>PPP actual</label><div class="equiv-box" id="fp-ppp">—</div></div>
+      </div>
+      <div class="fbtn" style="margin-top:8px"><button class="btn-s" onclick="addLineaFact()"><i class="ti ti-plus"></i> Agregar producto</button></div>
+      <div id="f-lineas-lista" style="margin-top:8px"></div>
+    </div>
+
+    <div style="margin-top:10px;padding:10px 12px;background:var(--dark2);border-radius:9px;border:1px solid var(--gold-dark)">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <span style="font-size:13px;color:var(--text2)">Total factura</span>
+        <span style="font-size:18px;font-weight:700;color:var(--gold)" id="f-total">0 CUP</span>
+      </div>
+    </div>
+    <div class="fbtn"><button class="btn-p" onclick="addFact()"><i class="ti ti-check"></i> Guardar factura</button></div>
   </div>
   <div class="card">
     <div class="ct">
       <span>Facturas registradas</span>
       <div style="display:flex;gap:6px;flex-wrap:wrap">
-        <input type="date" id="f-ff" style="font-size:12px;padding:4px 7px;border:1px solid #e5e5e0;border-radius:7px" onchange="renderFact()">
+        <input type="date" id="f-ff" style="font-size:12px;padding:4px 7px;border:1px solid var(--border);border-radius:7px;background:var(--dark2);color:var(--text)" onchange="renderFact()">
         <button class="btn-s" style="font-size:12px;padding:4px 9px" onclick="expTbl('f-tbl','Facturas')"><i class="ti ti-printer"></i></button>
       </div>
     </div>
-    <div class="tw"><table id="f-tbl"><thead><tr><th>Fecha</th><th>Empresa</th><th>Tipo</th><th>Cliente/Prov.</th><th>Concepto</th><th>Mon.</th><th>Monto</th><th>CUP</th><th>Estado</th></tr></thead><tbody id="f-tbody"></tbody></table></div>
+    <div class="tw"><table id="f-tbl"><thead><tr><th>Fecha</th><th>Empresa</th><th>Tipo</th><th>Cliente/Prov.</th><th>Productos</th><th>Mon.</th><th>Total CUP</th><th>Estado</th></tr></thead><tbody id="f-tbody"></tbody></table></div>
   </div>
 </div>
 
@@ -739,22 +764,143 @@ function buscarHist(){
   tb.innerHTML=res.map(function(r){var bdg=r.tipo==='Transaccion'?'bg':r.tipo==='Factura'?'ba':r.tipo==='IPV'?'bp':'br';return '<tr><td>'+fd(r.fecha)+'</td><td style="color:'+(EC[r.emp]||'#888')+';font-weight:600">'+r.emp.split(' ')[0]+'</td><td><span class="badge '+bdg+'">'+r.tipo+'</span></td><td style="font-size:11px">'+r.det+'</td><td>'+r.m+'</td><td style="font-weight:700;color:'+(r.cup>=0?'#0F6E56':'#A32D2D')+'">'+fmt(Math.abs(r.cup))+'</td></tr>';}).join('');
 }
 
-// ─── FACTURAS ───
-function addFact(){
-  var emp=gv('fe'),ti=gv('fti'),cli=gv('fc'),m=Number(gv('fm'))||0,kon=gv('fk'),est=gv('fs');
-  var mon=gv('f-mon');if(!m||!cli)return;
-  var cup=toCUP(m,mon);
-  var row={fecha:new Date(),emp,tipo:ti,cli,monto:m,mon,cup,kon,estado:est,notas:gv('f-notas')};
-  facts.push(row);saveData();
-  ['fc','fm','fk','f-notas'].forEach(function(id){document.getElementById(id).value='';});document.getElementById('f-eq').textContent='0 CUP';
-  toSheet('FACTURAS',[fd(row.fecha),emp,ti,cli,kon,m,mon,Math.round(cup),est]);
-  renderFact();renderRes();
+// ─── FACTURAS CON PRODUCTOS ───
+var tipoFact='Emitida';
+var lineasFact=[];
+
+function setTipoFact(tipo){
+  tipoFact=tipo;
+  var be=document.getElementById('f-tipo-btn-e'),br=document.getElementById('f-tipo-btn-r');
+  var msg=document.getElementById('f-tipo-msg');
+  var stockBox=document.getElementById('fp-stock-box'),pppBox=document.getElementById('fp-ppp-box');
+  if(tipo==='Emitida'){
+    be.style.background='var(--gold)';be.style.color='var(--dark)';be.style.fontWeight='700';
+    br.style.background='none';br.style.color='var(--text2)';br.style.fontWeight='400';
+    msg.textContent='Factura emitida: registra una venta. Reduce el stock y genera ingreso.';
+    document.getElementById('fp-precio-lbl').textContent='Precio venta unitario (CUP)';
+    stockBox.style.display='flex';pppBox.style.display='flex';
+  } else {
+    br.style.background='var(--gold)';br.style.color='var(--dark)';br.style.fontWeight='700';
+    be.style.background='none';be.style.color='var(--text2)';be.style.fontWeight='400';
+    msg.textContent='Factura recibida: registra una compra. Aumenta el stock y actualiza el costo (PPP).';
+    document.getElementById('fp-precio-lbl').textContent='Precio costo unitario (CUP)';
+    stockBox.style.display='none';pppBox.style.display='none';
+  }
+  lineasFact=[];renderLineas();
 }
+
+function cargarDatosProd(){
+  var nom=document.getElementById('fp-nom').value.trim();
+  var emp=document.getElementById('fe').value;
+  var key=emp+'::'+nom;
+  var s=stock[key];
+  if(s&&tipoFact==='Emitida'){
+    document.getElementById('fp-stock').textContent=Math.round(s.cant)+' unid.';
+    document.getElementById('fp-ppp').textContent=s.ppp.toFixed(2)+' CUP';
+  } else {
+    document.getElementById('fp-stock').textContent='—';
+    document.getElementById('fp-ppp').textContent='—';
+  }
+  calcLineaFact();
+}
+
+function calcLineaFact(){
+  var cant=Number(document.getElementById('fp-cant').value)||0;
+  var precio=Number(document.getElementById('fp-precio').value)||0;
+  var mon=document.getElementById('f-mon').value||'CUP';
+  var sub=toCUP(cant*precio,mon);
+  document.getElementById('fp-sub').textContent=fmt(sub);
+}
+
+function addLineaFact(){
+  var nom=document.getElementById('fp-nom').value.trim();
+  var cant=Number(document.getElementById('fp-cant').value)||0;
+  var precio=Number(document.getElementById('fp-precio').value)||0;
+  var mon=document.getElementById('f-mon').value||'CUP';
+  if(!nom||!cant||!precio)return;
+  var sub=toCUP(cant*precio,mon);
+  lineasFact.push({nom,cant,precio,mon,sub});
+  document.getElementById('fp-nom').value='';
+  document.getElementById('fp-cant').value='';
+  document.getElementById('fp-precio').value='';
+  document.getElementById('fp-sub').textContent='0 CUP';
+  document.getElementById('fp-stock').textContent='—';
+  document.getElementById('fp-ppp').textContent='—';
+  renderLineas();
+}
+
+function removeLinea(i){lineasFact.splice(i,1);renderLineas();}
+
+function renderLineas(){
+  var lista=document.getElementById('f-lineas-lista');
+  var total=lineasFact.reduce(function(a,l){return a+l.sub;},0);
+  document.getElementById('f-total').textContent=fmt(total);
+  if(!lineasFact.length){lista.innerHTML='';return;}
+  lista.innerHTML='<div class="tw"><table><thead><tr><th>Producto</th><th>Cant.</th><th>Precio unit.</th><th>Subtotal</th><th></th></tr></thead><tbody>'+
+    lineasFact.map(function(l,i){
+      return '<tr><td style="font-weight:600">'+l.nom+'</td><td>'+l.cant+'</td><td>'+l.precio+' <span class="moneda-badge">'+l.mon+'</span></td><td style="color:var(--gold);font-weight:700">'+fmt(l.sub)+'</td><td><button onclick="removeLinea('+i+')" style="background:none;border:none;color:#F87171;cursor:pointer"><i class="ti ti-trash"></i></button></td></tr>';
+    }).join('')+'</tbody></table></div>';
+}
+
+function addFact(){
+  var emp=document.getElementById('fe').value;
+  var cli=document.getElementById('fc').value.trim();
+  var mon=document.getElementById('f-mon').value||'CUP';
+  var notas=document.getElementById('f-notas').value;
+  var est=document.getElementById('fs').value;
+  if(!cli||!lineasFact.length)return;
+  var total=lineasFact.reduce(function(a,l){return a+l.sub;},0);
+
+  // Procesar cada producto
+  lineasFact.forEach(function(l){
+    var key=emp+'::'+l.nom;
+    var s=stock[key]||{cant:0,ppp:l.precio,fecha:new Date().toISOString()};
+    if(tipoFact==='Emitida'){
+      // Venta: reduce stock, genera ingreso
+      var nuevaCant=Math.max(0,s.cant-l.cant);
+      var gan=l.cant*(l.precio-s.ppp);
+      stock[key]={cant:nuevaCant,ppp:s.ppp,fecha:new Date().toISOString()};
+      if(!ipvData[emp])ipvData[emp]=[];
+      ipvData[emp].push({fecha:new Date(),prod:l.nom,ini:s.cant,ent:0,ven:l.cant,baj:0,ext:0,motivo:'',fin:nuevaCant,pc:s.ppp,ppp:s.ppp,pv:l.precio,gan:gan,perd:0,notas:'Factura emitida a '+cli});
+      trans.push({fecha:new Date(),emp,tipo:'Ingreso',cat:'Venta por factura',monto:l.cant*l.precio,mon,cup:l.sub,met:'factura',com:0,kon:'Venta '+l.nom+' x'+l.cant+' a '+cli,notas});
+    } else {
+      // Compra: aumenta stock, actualiza PPP
+      var cA=s.cant,pppA=s.ppp;
+      var pppN=(cA>0||l.cant>0)?(cA*pppA+l.cant*l.precio)/(cA+l.cant):l.precio;
+      var nuevaCant2=s.cant+l.cant;
+      stock[key]={cant:nuevaCant2,ppp:pppN,fecha:new Date().toISOString()};
+      if(!ipvData[emp])ipvData[emp]=[];
+      ipvData[emp].push({fecha:new Date(),prod:l.nom,ini:s.cant,ent:l.cant,ven:0,baj:0,ext:0,motivo:'',fin:nuevaCant2,pc:l.precio,ppp:pppN,pv:0,gan:0,perd:0,notas:'Factura recibida de '+cli});
+      trans.push({fecha:new Date(),emp,tipo:'Gasto',cat:'Compra por factura',monto:l.cant*l.precio,mon,cup:l.sub,met:'factura',com:0,kon:'Compra '+l.nom+' x'+l.cant+' de '+cli,notas});
+    }
+  });
+
+  saveStock();
+  var row={fecha:new Date(),emp,tipo:tipoFact,cli,lineas:lineasFact.slice(),mon,cup:total,notas,estado:est};
+  facts.push(row);
+  saveData();
+
+  // Enviar a Sheets
+  toSheet('FACTURAS',[fd(new Date()),emp,tipoFact,cli,lineasFact.map(function(l){return l.nom+'x'+l.cant;}).join(', '),mon,Math.round(total),est,notas]);
+
+  // Limpiar formulario
+  document.getElementById('fc').value='';
+  document.getElementById('f-notas').value='';
+  lineasFact=[];renderLineas();
+  showS('Factura guardada — stock e inventario actualizados','ok');
+  renderFact();renderRes();renderInv();
+}
+
 function togEst(i){facts[i].estado=facts[i].estado==='Pendiente'?'Pagada':'Pendiente';saveData();renderFact();renderRes();}
+
 function renderFact(){
   var datos=filtD(facts,'f-ff');var tb=document.getElementById('f-tbody');
-  if(!datos.length){tb.innerHTML='<tr><td colspan="9" class="empty"><i class="ti ti-inbox"></i>Sin facturas</td></tr>';return;}
-  tb.innerHTML=datos.slice().reverse().map(function(f,i){var ri=facts.length-1-i;return '<tr><td>'+fd(f.fecha)+'</td><td style="color:'+(EC[f.emp]||'#888')+';font-weight:600">'+f.emp.split(' ')[0]+'</td><td>'+f.tipo+'</td><td>'+f.cli+'</td><td>'+f.kon+'</td><td><span class="moneda-badge">'+f.mon+'</span></td><td>'+f.monto+'</td><td style="font-weight:700">'+fmt(f.cup)+'</td><td><span class="badge '+(f.estado==='Pagada'?'bg':'ba')+'" style="cursor:pointer" onclick="togEst('+ri+')">'+f.estado+'</span></td></tr>';}).join('');
+  if(!datos.length){tb.innerHTML='<tr><td colspan="8" class="empty"><i class="ti ti-inbox"></i>Sin facturas</td></tr>';return;}
+  tb.innerHTML=datos.slice().reverse().map(function(f,i){
+    var ri=facts.length-1-i;
+    var prods=f.lineas?f.lineas.map(function(l){return l.nom+' x'+l.cant;}).join(', '):(f.kon||'—');
+    return '<tr><td>'+fd(f.fecha)+'</td><td style="color:'+(EC[f.emp]||'#888')+';font-weight:600">'+f.emp.split(' ')[0]+'</td><td><span class="badge '+(f.tipo==='Emitida'?'bg':'bp')+'">'+f.tipo+'</span></td><td>'+f.cli+'</td><td style="font-size:11px;max-width:160px;white-space:normal">'+prods+'</td><td><span class="moneda-badge">'+f.mon+'</span></td><td style="font-weight:700;color:var(--gold)">'+fmt(f.cup)+'</td><td><span class="badge '+(f.estado==='Pagada'?'bg':'ba')+'" style="cursor:pointer" onclick="togEst('+ri+')">'+f.estado+'</span></td></tr>';
+  }).join('');
 }
 
 // ─── CUENTAS ───
@@ -870,6 +1016,7 @@ loadStock();
 loadData();
 loadQ();
 updBadge();
+setTipoFact('Emitida');
 
 if(empresas.length){
   document.getElementById('ipv-emp-lbl').textContent=ipvEmp;
